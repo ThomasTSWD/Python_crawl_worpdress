@@ -1,0 +1,2898 @@
+Titre: Supprimer des mots
+Contenu: <p><code></p>
+<p>function removeString(searchString) {<br />
+    var escapedString = searchString.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');</p>
+<p>    $("body *").contents().each(function() {<br />
+        if (this.nodeType === 3 && this.nodeValue.includes(searchString)) {<br />
+            var newValue = this.nodeValue.split(escapedString).join(''); // Supprime simplement la chaîne en la remplaçant par une chaîne vide<br />
+            $(this).replaceWith(newValue);<br />
+        }<br />
+    });<br />
+}</p>
+<p>$(document).ready(function() {<br />
+    removeString('LaStringASupprimer'); // Appelez la fonction avec le mot que vous souhaitez supprimer 🍨🎨<br />
+});</p>
+<p></code></p>
+
+
+Titre: Entourer des mots de balises html
+Contenu: <p><code></p>
+<p>function highlightString(searchString) {<br />
+    var escapedString = searchString.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');</p>
+<p>    $("body #main-content *").contents().each(function() {<br />
+        if (this.nodeType === 3 && this.nodeValue.includes(searchString)) {<br />
+            var newValue = this.nodeValue.split(escapedString).join('<i class="italic-expo-title">' + escapedString + '</i>');<br />
+            $(this).replaceWith(newValue);<br />
+        }<br />
+    });<br />
+}</p>
+<p>		highlightString('Toucher terre');<br />
+		highlightString('Expositions');</p>
+<p></code></p>
+
+
+Titre: cubic beszier sympa
+Contenu: <p><code><br />
+ transition-duration: 666ms;<br />
+    transition-timing-function: cubic-bezier(.25,.75,.5,1.25);<br />
+    transform: scale(0);<br />
+</code></p>
+<p>https://codepen.io/bennettfeely/pen/DOexxp</p>
+
+
+Titre: Divi auto-generate Yoast WordPress SEO meta descriptions
+Contenu: <p><code><br />
+// Divi auto-generate Yoast WordPress SEO meta descriptions<br />
+add_filter( 'wpseo_metadesc', 'divi_auto_gen_meta_description' );<br />
+function divi_auto_gen_meta_description($metadesc) {<br />
+	if( trim($metadesc) == '' ) {<br />
+		global $post;<br />
+		$rendered_content = apply_filters('the_content', $post->post_content);<br />
+		$newmetadesc = strip_tags( $rendered_content );<br />
+		$newmetadesc = preg_replace( "/\r|\n/", " ", $newmetadesc );<br />
+		$newmetadesc = trim($newmetadesc);<br />
+		$newmetadesc = str_replace( "	", " ", $newmetadesc );<br />
+		$newmetadesc = preg_replace('/\s+/', ' ', $newmetadesc);<br />
+		return trim(substr($newmetadesc, 0, 250));<br />
+	} else {<br />
+		return $metadesc;<br />
+	}<br />
+}</p>
+<p></code></p>
+
+
+Titre: Traduire footer-bottom Divi avec Polylang + widget shortcode (dans tswd plugin)
+Contenu: <p><code><br />
+function et_get_footer_credits() {<br />
+  $credits_format = '&lt;%2$s id=&quot;footer-info&quot;&gt;%1$s&lt;/%2$s&gt;';<br />
+  $footer_credits =  do_shortcode('') . do_shortcode('');<br />
+  return et_get_safe_localization( sprintf( $credits_format, $footer_credits, 'div' ) );<br />
+}</p>
+<p></code></p>
+
+
+Titre: Divi map maker color / change
+Contenu: <p>CSS Method</p>
+<p><code><br />
+.et_pb_map img[src*='marker']{<br />
+	filter:saturate(0) brightness(0.2)<br />
+}</p>
+<p></code></p>
+<p>HTACCESS Method</p>
+<p><code><br />
+IfModule mod_rewrite.c><br />
+RewriteEngine On<br />
+RewriteRule ^wp-content/themes/Divi/images/marker\.png$ http://www.mysite.com/my-custom-pin.png [L]<br />
+RewriteRule ^wp-content/themes/Divi/includes/builder/images/marker.png$ http://www.mysite.com/my-custom-pin.png [L]<br />
+/IfModule></p>
+<p></code></p>
+
+
+Titre: Divi blurry images
+Contenu: <p><code><br />
+// Begin remove Divi Portfolio and Filterable Portfolio featured image crop<br />
+function pa_portfolio_image_width($width) {<br />
+	return '9999';<br />
+}<br />
+function pa_portfolio_image_height($height) {<br />
+	return '9999';<br />
+}<br />
+add_filter( 'et_pb_portfolio_image_width', 'pa_portfolio_image_width' );<br />
+add_filter( 'et_pb_portfolio_image_height', 'pa_portfolio_image_height' );</p>
+<p>// Begin remove Divi Gallery Module image crop<br />
+function pa_gallery_image_width( $size ) {<br />
+return 9999;<br />
+}<br />
+function pa_gallery_image_height( $size ) {<br />
+return 9999;<br />
+}<br />
+add_filter( 'et_pb_gallery_image_width', 'pa_gallery_image_width' );<br />
+add_filter( 'et_pb_gallery_image_height', 'pa_gallery_image_height' );</p>
+<p>// Begin remove Divi Blog Module featured image crop<br />
+function pa_blog_image_width($width) {<br />
+	return '9999';<br />
+}<br />
+function pa_blog_image_height($height) {<br />
+	return '9999';<br />
+}<br />
+add_filter( 'et_pb_blog_image_width', 'pa_blog_image_width' );<br />
+add_filter( 'et_pb_blog_image_height', 'pa_blog_image_height' );</p>
+<p></code></p>
+
+
+Titre: Automatically set the image Title, Alt-Text, Caption &#038; Description upon upload
+Contenu: <p><code><br />
+/* Automatically set the image Title, Alt-Text, Caption & Description upon upload<br />
+--------------------------------------------------------------------------------------*/<br />
+add_action( 'add_attachment', 'my_set_image_meta_upon_image_upload' );<br />
+function my_set_image_meta_upon_image_upload( $post_ID ) {</p>
+<p>	// Check if uploaded file is an image, else do nothing</p>
+<p>	if ( wp_attachment_is_image( $post_ID ) ) {</p>
+<p>		$my_image_title = "Metamorph'Ose Agence de communication Carpentras Avignon Vaucluse";</p>
+<p>		// Create an array with the image meta (Title, Caption, Description) to be updated<br />
+		// Note:  comment out the Excerpt/Caption or Content/Description lines if not needed<br />
+		$my_image_meta = array(<br />
+			'ID'		=> $post_ID,			// Specify the image (ID) to be updated<br />
+			'post_title'	=> $my_image_title,		// Set image Title to sanitized title<br />
+			'post_excerpt'	=> $my_image_title,		// Set image Caption (Excerpt) to sanitized title<br />
+			'post_content'	=> $my_image_title,		// Set image Description (Content) to sanitized title<br />
+		);</p>
+<p>		// Set the image Alt-Text<br />
+		update_post_meta( $post_ID, '_wp_attachment_image_alt', $my_image_title );</p>
+<p>		// Set the image meta (e.g. Title, Excerpt, Content)<br />
+		wp_update_post( $my_image_meta );</p>
+<p>	}<br />
+}</p>
+<p></code></p>
+
+
+Titre: cache rules htaccess
+Contenu: <p><code></p>
+<p>&lt;IfModule mod_expires.c&gt;<br />
+  ExpiresActive On</p>
+<p> # Images<br />
+  ExpiresByType image/jpeg &quot;access plus 1 year&quot;<br />
+  ExpiresByType image/gif &quot;access plus 1 year&quot;<br />
+  ExpiresByType image/png &quot;access plus 1 year&quot;<br />
+  ExpiresByType image/webp &quot;access plus 1 year&quot;<br />
+  ExpiresByType image/svg+xml &quot;access plus 1 year&quot;<br />
+  ExpiresByType image/x-icon &quot;access plus 1 year&quot;</p>
+<p>  # Video<br />
+  ExpiresByType video/webm &quot;access plus 1 year&quot;<br />
+  ExpiresByType video/mp4 &quot;access plus 1 year&quot;<br />
+  ExpiresByType video/mpeg &quot;access plus 1 year&quot;</p>
+<p>  # Fonts<br />
+  ExpiresByType font/ttf &quot;access plus 1 year&quot;<br />
+  ExpiresByType font/otf &quot;access plus 1 year&quot;<br />
+  ExpiresByType font/woff &quot;access plus 1 year&quot;<br />
+  ExpiresByType font/woff2 &quot;access plus 1 year&quot;<br />
+  ExpiresByType application/font-woff &quot;access plus 1 year&quot;<br />
+  ExpiresByType application/font-woff2 &quot;access plus 1 year&quot;</p>
+<p>  # CSS, JavaScript<br />
+  ExpiresByType text/css &quot;access plus 1 year&quot;<br />
+  ExpiresByType text/javascript &quot;access plus 1 year&quot;<br />
+  ExpiresByType application/javascript &quot;access plus 1 year&quot;</p>
+<p>  # Others<br />
+  ExpiresByType application/pdf &quot;access plus 1 year&quot;<br />
+  ExpiresByType image/vnd.microsoft.icon &quot;access plus 1 year&quot;<br />
+&lt;/IfModule&gt;</p>
+<p></code></p>
+
+
+Titre: Traduire texte WordPress
+Contenu: <p><code></p>
+<p>function custom_text_replace( $translated_text, $untranslated_text, $domain ) {<br />
+    switch ( $untranslated_text ) {<br />
+        case 'Read More':<br />
+            $translated_text = __( 'Learn More', $domain );<br />
+            break;<br />
+        case 'Leave a Comment':<br />
+            $translated_text = __( 'Share Your Thoughts', $domain );<br />
+            break;<br />
+        case 'Search':<br />
+            $translated_text = __( 'Find', $domain );<br />
+            break;<br />
+        default:<br />
+            $translated_text = $untranslated_text;<br />
+            break;<br />
+    }<br />
+    return $translated_text;<br />
+}<br />
+add_filter( 'gettext', 'custom_text_replace', 20, 3 );<br />
+</code></p>
+<p>SI LANGUAGES </p>
+<p><code><br />
+function custom_text_replace( $translated_text, $untranslated_text, $domain ) {<br />
+    switch ( $untranslated_text ) {<br />
+        case 'View Detail':<br />
+			if (get_locale()  === 'fr_FR') {<br />
+            $translated_text = __( 'Voir les détails', $domain );<br />
+			}<br />
+            break;<br />
+        case 'From':<br />
+			if (get_locale()  === 'fr_FR') {<br />
+            $translated_text = __( 'À partir de', $domain );<br />
+			}<br />
+            break;<br />
+        case 'Amenities & Services':<br />
+			if (get_locale()  === 'fr_FR') {<br />
+            $translated_text = __( 'Équipements et Services', $domain );<br />
+			}<br />
+            break;<br />
+		case 'Amenities':<br />
+			if (get_locale()  === 'fr_FR') {<br />
+        $translated_text = __( 'Équipements', $domain );<br />
+			}<br />
+        break;</p>
+<p>			case 'Gallery':<br />
+			if (get_locale()  === 'fr_FR') {<br />
+        $translated_text = __( 'Galerie', $domain );<br />
+			}<br />
+        break;<br />
+				case 'Book Now':<br />
+			if (get_locale()  === 'fr_FR') {<br />
+        $translated_text = __( 'Réserver', $domain );<br />
+			}<br />
+        break;</p>
+<p>        default:<br />
+            $translated_text = $untranslated_text;<br />
+            break;<br />
+    }<br />
+    return $translated_text;<br />
+}<br />
+add_filter( 'gettext', 'custom_text_replace', 20, 3 );<br />
+</code></p>
+
+
+Titre: Convert strings to links
+Contenu: <p><code></p>
+<p>$('.explore-listing li em').each(function() {</p>
+<p>    var matches = $(this).text().match(/\d+/g);<br />
+    if (matches != null) {<br />
+        $(this).css('color', 'red')</p>
+<p>        let numString = $(this).text();<br />
+        let numStringLink = $(this).text().replace(/ /g, '');</p>
+<p>        $(this).html('&lt;a href=&quot;tel:' + numStringLink + '&quot;&gt;' + numString + '&lt;/a&gt;')<br />
+    } else {</p>
+<p>        let mailString = $(this).text()<br />
+        $(this).html('&lt;a target=&quot;_blank&quot; href=&quot;http://' + mailString + '&quot; rel=&quot;noopener&quot;&gt;' + mailString + '&lt;/a&gt;')</p>
+<p>    }</p>
+<p>})<br />
+</code></p>
+
+
+Titre: text overflow wrap hyphens
+Contenu: <p><code></p>
+<p>h1{<br />
+	    overflow-wrap: initial;<br />
+	 -webkit-hyphens: auto;<br />
+  -ms-hyphens: auto;<br />
+  hyphens: auto;<br />
+}</p>
+<p></code></p>
+<p>https://codepen.io/Chmylov/pen/GPByPG</p>
+
+
+Titre: Divi MAP Marker open by default
+Contenu: <p><code><br />
+// MAP Marker open by default ---------------------<br />
+	$(window).load(function() {<br />
+		setTimeout(function() {<br />
+			$this_map_container = $('.et_pb_map_container');<br />
+			$this_map_container.find('.et_pb_map_pin').each(function() {<br />
+				let $this_marker = $(this);<br />
+				let marker = new google.maps.Marker({<br />
+					position: new google.maps.LatLng(parseFloat($this_marker.attr('data-lat')), parseFloat($this_marker.attr('data-lng'))),<br />
+					map: $this_map_container.data('map'),<br />
+					title: $this_marker.attr('data-title'),<br />
+					icon: {<br />
+						url: et_pb_custom.builder_images_uri + '/marker.png',<br />
+						size: new google.maps.Size(46, 43),<br />
+						anchor: new google.maps.Point(16, 43)<br />
+					},<br />
+					shape: {<br />
+						coord: [1, 1, 46, 43],<br />
+						type: 'rect'<br />
+					},<br />
+					anchorPoint: new google.maps.Point(0, -45),<br />
+					opacity: 0<br />
+				});<br />
+				if ($this_marker.find('.infowindow').length) {<br />
+					let infowindow = new google.maps.InfoWindow({<br />
+						content: $this_marker.html()<br />
+					});<br />
+					infowindow.open($this_map_container.data('map'), marker);<br />
+					google.maps.event.addListener($this_map_container.data('map'), 'click', function() {<br />
+						infowindow.close();<br />
+						marker.setMap(null);<br />
+					});<br />
+					google.maps.event.addListener(infowindow, 'closeclick', function() {<br />
+						infowindow.close();<br />
+						marker.setMap(null);<br />
+					});<br />
+				}<br />
+			});<br />
+		}, 4000);<br />
+	});<br />
+</code></p>
+
+
+Titre: Attributes on facture + styles  WP OVERNIGHT WooCommerce PDF Invoices
+Contenu: <p><code><br />
+/******* Attributes on facture + styles  WP OVERNIGHT WooCommerce PDF Invoices &amp; Packing Slips *******/</p>
+<p>add_action( 'wpo_wcpdf_after_item_meta', 'wpo_wcpdf_show_product_attributes', 10, 3 );<br />
+function wpo_wcpdf_show_product_attributes ( $template_type, $item, $order ) {<br />
+    if(empty($item['product'])) return;<br />
+    $document = wcpdf_get_document( $template_type, $order );</p>
+<p>    if( !has_term( 'hebergement', 'product_cat', $item['product']-&gt;get_id() ) ) {</p>
+<p>    printf('&lt;div class=&quot;product-attribute&quot;&gt;%s&lt;/div&gt;', $document-&gt;get_product_attribute('appellation', $item['product']));<br />
+    printf('&lt;div class=&quot;product-attribute&quot;&gt;Mill&eacute;sime : %s&lt;/div&gt;', $document-&gt;get_product_attribute('millesime', $item['product']));<br />
+    printf('&lt;div class=&quot;product-attribute&quot;&gt;Centilisation : %s&lt;/div&gt;', $document-&gt;get_product_attribute('centilisation', $item['product']));<br />
+}</p>
+<p>}<br />
+add_action( 'wpo_wcpdf_custom_styles', 'wpo_wcpdf_custom_styles' );<br />
+function wpo_wcpdf_custom_styles () {<br />
+  ?&gt;<br />
+.wc-item-meta,<br />
+  dt.weight,<br />
+  dd.weight,<br />
+  .packing-slip #footer {<br />
+    display: none;<br />
+  }</p>
+<p>.product-attribute {<br />
+font-size: 7pt; line-height: 7pt;<br />
+}</p>
+<p>  &lt;?php<br />
+}</p>
+<p></code></p>
+
+
+Titre: tswd bug
+Contenu: <p><code><br />
+if (!is_admin() || empty($_GET['et_fb'])) {</p>
+<p>add_action('wp_enqueue_scripts', 'loadMyJs');</p>
+<p>add_action( 'wp_print_styles', 'loadMyStyle' );</p>
+<p>}</p>
+<p></code></p>
+<p>&#8212;</p>
+<p><code><br />
+function rmvJsfromBck() {</p>
+<p>    echo '&lt;script&gt;jQuery(window).load(function () {jQuery(&quot;#et-bfb-app-frame&quot;).contents().find(&quot;#myCss-css&quot;).remove(); console.log(&quot;ee&quot;)});&lt;/script&gt;';</p>
+<p>}<br />
+add_action('admin_head', 'rmvJsfromBck');</p>
+<p></code></p>
+
+
+Titre: Divi link module to data url
+Contenu: <p><code><br />
+diviLinks = et_link_options_data;<br />
+for (let i = 0; i < diviLinks.length; i++) {
+	let item = diviLinks[i];
+	let itemClass = item.class;
+	let itemUrl = item.url;
+	console.log(itemClass + "  " + itemUrl)
+	$('.' + itemClass).attr('data-url', itemUrl)
+}
+
+
+</code></p>
+
+
+Titre: nicescroll
+Contenu: <p><code><br />
+	$(window).on('load resize', function() {<br />
+		$("body").niceScroll({<br />
+			zindex: 999999,<br />
+			cursorcolor: "#34312E", // change cursor color in hex<br />
+			cursoropacitymin: 0, // change opacity when cursor is inactive (scrollabar "hidden" state), range from 1 to 0<br />
+			cursoropacitymax: 1, // change opacity when cursor is active (scrollabar "visible" state), range from 1 to 0<br />
+			cursorwidth: "9px", // cursor width in pixel (you can also write "5px")<br />
+			cursorborder: "0px solid #fff", // css definition for cursor border<br />
+			cursorborderradius: "0px", // border radius in pixel for cursor<br />
+			scrollspeed: 60, // scrolling speed<br />
+			mousescrollstep: 40, // scrolling speed with mouse wheel (pixel)<br />
+			touchbehavior: false, // DEPRECATED!! use "emulatetouch"<br />
+			emulatetouch: false, // enable cursor-drag scrolling like touch devices in desktop computer<br />
+			hwacceleration: true, // use hardware accelerated scroll when supported<br />
+			boxzoom: false, // enable zoom for box content<br />
+			dblclickzoom: true, // (only when boxzoom=true) zoom activated when double click on box<br />
+			gesturezoom: true, // (only when boxzoom=true and with touch devices) zoom activated when pinch out/in on box<br />
+			grabcursorenabled: true, // (only when touchbehavior=true) display "grab" icon<br />
+			autohidemode: true, // how hide the scrollbar works, possible values:<br />
+			background: "#f3f3f3", // change css for rail background<br />
+			iframeautoresize: true, // autoresize iframe on load event<br />
+		});<br />
+	})</p>
+<p>$(window).scroll(function() {<br />
+    if ($(window).scrollTop()  > $(window).height() / 2)<br />
+    {<br />
+      $("body").getNiceScroll().resize();<br />
+    }<br />
+});</p>
+<p></code></p>
+
+
+Titre: security headers htaccess
+Contenu: <p><code><br />
+&lt;IfModule mod_headers.c&gt;<br />
+   Header set Referrer-Policy &quot;strict-origin-when-cross-origin&quot;<br />
+   Header set X-XSS-Protection &quot;1; mode=block&quot;<br />
+   Header set X-Content-Type-Options &quot;nosniff&quot;<br />
+   Header set X-Frame-Options &quot;SAMEORIGIN&quot;<br />
+   Header set Strict-Transport-Security &quot;max-age=31536000&quot;<br />
+   Header unset X-Powered-By<br />
+  Header add Content-Security-Policy &quot;default-src 'self';&quot;<br />
+  Header always set Permissions-Policy &quot;geolocation=(); midi=();notifications=();push=();sync-xhr=();accelerometer=(); gyroscope=(); magnetometer=(); payment=(); camera=(); microphone=();usb=(); xr=();speaker=(self);vibrate=();fullscreen=(self);&quot;<br />
+&lt;/IfModule&gt;<br />
+</code></p>
+
+
+Titre: Random numbers between
+Contenu: <p><code></p>
+<p>	function getRandomNumberBetween(min,max){<br />
+    return Math.floor(Math.random()*(max-min+1)+min);<br />
+	}</p>
+<p></code></p>
+
+
+Titre: Random colors between
+Contenu: <p><code><br />
+	 function RandomColor() {<br />
+    colors = ['#18d9e5', '#28299c', '#ffe6e6', 'white']<br />
+    return colors[Math.floor(Math.random()*colors.length)];<br />
+}</p>
+<p></code></p>
+
+
+Titre: POST FUTUR + reorder
+Contenu: <p><code><br />
+remove_action('future_post', '_future_post_hook');<br />
+add_filter( 'wp_insert_post_data', 'futurenow_do_not_set_posts_to_future' );<br />
+function futurenow_do_not_set_posts_to_future( $data ) {<br />
+    if ( $data['post_status'] == 'future' &amp;&amp; $data['post_type'] == 'post' )<br />
+        $data['post_status'] = 'publish';<br />
+    return $data;<br />
+}</p>
+<p>function change_category_order( $query ) {<br />
+    if($query-&gt;is_category('10') /*&amp;&amp; $query-&gt;is_main_query()*/){<br />
+        $query-&gt;set( 'order', 'ASC' );<br />
+    }</p>
+<p>}<br />
+add_action( 'pre_get_posts', 'change_category_order' );<br />
+</code></p>
+
+
+Titre: vertical scroll moving image
+Contenu: <p><code><br />
+if ($('.vertical-scroll').length) {<br />
+		$(window).on('scroll resize', function() {<br />
+				if (window.matchMedia("(min-width: 980px)").matches) {</p>
+<p>			let fromTopPx = $(window).scrollTop();<br />
+			//console.log(fromTopPx)<br />
+			let fromTopPxSection = $('#horizontal-scroll').offset().top;<br />
+			//console.log(fromTopPxSection);<br />
+			let scrollDifference = (fromTopPxSection - fromTopPx) / 15;<br />
+			//console.log(scrollDifference)<br />
+			$('.horizontal-scroll .et_pb_image').css('transform', 'translatey(' + scrollDifference + 'px)');<br />
+					}<br />
+		})<br />
+	}</p>
+<p></code></p>
+
+
+Titre: DIVI ALT IMAGE
+Contenu: <p><code></p>
+<p>/* Automatically set the image Title & Alt-Text upon upload*/<br />
+add_action( 'add_attachment', 'my_set_image_meta_upon_image_upload' );<br />
+function my_set_image_meta_upon_image_upload( $post_ID ) {<br />
+    // Check if uploaded file is an image, else do nothing<br />
+    if ( wp_attachment_is_image( $post_ID ) ) {<br />
+        $my_image_title = get_post( $post_ID )->post_title;<br />
+        // Sanitize the title:  remove hyphens, underscores & extra spaces:<br />
+        $my_image_title = preg_replace( '%\s*[-_\s]+\s*%', ' ',  $my_image_title );<br />
+        // Sanitize the title:  capitalize first letter of every word (other letters lower case):<br />
+        $my_image_title = ucwords( strtolower( $my_image_title ) );<br />
+        // Create an array with the image meta (Title, Caption, Description) to be updated<br />
+        $my_image_meta = array(<br />
+            'ID'        => $post_ID,            // Specify the image (ID) to be updated<br />
+            'post_title'    => $my_image_title,     // Set image Title to sanitized title<br />
+        );<br />
+        // Set the image Alt-Text<br />
+        update_post_meta( $post_ID, '_wp_attachment_image_alt', $my_image_title );<br />
+        // Set the image meta (e.g. Title, Excerpt, Content)<br />
+        wp_update_post( $my_image_meta );<br />
+    }<br />
+}<br />
+/* Fetch image alt text from media library */<br />
+function get_image_alt_text($image_url) {<br />
+    if ( ! $image_url ) return '';<br />
+    if ( '/' === $image_url[0] )<br />
+    $post_id = attachment_url_to_postid(home_url() . $image_url);<br />
+    else<br />
+    $post_id = attachment_url_to_postid($image_url);<br />
+    $alt_text = get_post_meta($post_id, '_wp_attachment_image_alt', true);<br />
+    if ( '' === $alt_text )<br />
+    $alt_text = get_the_title($post_id);<br />
+    return $alt_text;<br />
+}<br />
+/* Update image alt text in module properties */<br />
+function update_module_alt_text( $attrs, $unprocessed_attrs, $slug ) {<br />
+    if ( ( $slug === 'et_pb_image' || $slug === 'et_pb_fullwidth_image' ) && '' === $attrs['alt'] )<br />
+        $attrs['alt'] = get_image_alt_text($attrs['src']);<br />
+    elseif ( $slug === 'et_pb_blurb' && 'off' === $attrs['use_icon'] && '' === $attrs['alt'] )<br />
+        $attrs['alt'] = get_image_alt_text($attrs['image']);<br />
+    elseif ( $slug === 'et_pb_slide' && '' !== $attrs['image'] && '' === $attrs['image_alt'] )<br />
+        $attrs['image_alt'] = get_image_alt_text($attrs['image']);<br />
+    elseif ( $slug === 'et_pb_fullwidth_header' ) {<br />
+        if ( '' !== $attrs['logo_image_url'] && '' === $attrs['logo_alt_text'] )<br />
+            $attrs['logo_alt_text'] = get_image_alt_text($attrs['logo_image_url']);<br />
+        if ( '' !== $attrs['header_image_url'] && '' === $attrs['image_alt_text'] )<br />
+            $attrs['image_alt_text'] = get_image_alt_text($attrs['header_image_url']);<br />
+    }<br />
+    return $attrs;<br />
+}<br />
+add_filter( 'et_pb_module_shortcode_attributes', 'update_module_alt_text', 20, 3 );<br />
+</code></p>
+
+
+Titre: String to slug
+Contenu: <p><code><br />
+function string_to_slug(str) {<br />
+		str = str.replace(/^\s+|\s+$/g, '');<br />
+		str = str.toLowerCase();<br />
+		let from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";<br />
+		let to = "aaaaeeeeiiiioooouuuunc------";<br />
+		for (let i = 0, l = from.length; i < l; i++) {
+			str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+		}
+		str = str.replace(/[^a-z0-9 -]/g, '') 
+			.replace(/\s+/g, '-') 
+			.replace(/-+/g, '-'); 
+		return str;
+	}
+</code></p>
+
+
+Titre: Open close menu hb divi
+Contenu: <p><code></p>
+<p>$(document).on('click', ".open-menu", function(e){<br />
+    $('body').toggleClass('et_pb_fullscreen_menu_active');<br />
+	$('.et_slide_in_menu_container').toggleClass('et_pb_fullscreen_menu_opened');<br />
+	$('.et_slide_in_menu_container').toggleClass('et_pb_fullscreen_menu_animated');<br />
+  });</p>
+<p></code></p>
+
+
+Titre: Hide h1 SEO Cacher h1
+Contenu: <p>Tester Balises :</p>
+<p><a href="https://adresults.nl/tools/heading-tag-checker-check-h1-t-m-h6-tags" target="_blank" rel="noopener">Lien</a></p>
+<p><code><br />
+#main-page #pagetitle h1 {<br />
+font-size: 0;<br />
+width: 1px;<br />
+height: 1px;<br />
+display: inline-block;<br />
+overflow: hidden;<br />
+position: absolute!important;<br />
+border: 0!important;<br />
+padding: 0!important;<br />
+margin: 0!important;<br />
+clip: rect(1px,1px,1px,1px);<br />
+}<br />
+</code></p>
+<p><a href="https://wdn.unl.edu/page-title-h1-best-practices#:~:text=You%20can%20visually%20hide%20the,available%20to%20AT%20and%20bots." target="_blank" rel="noopener">-&gt; Article</a></p>
+
+
+Titre: Path text
+Contenu: <p>HTML</p>
+<p><code></p>
+<div id="path-text">
+<svg class="svgwave" xmlns="https://www.w3.org/2000/svg" width="301" height="21" viewBox="0 0 301 21">
+<path id="wavepath" d="M0,.5c30.0978,0,30.0978,20,60.1956,20S90.2948.5,120.394.5s30.1,20,60.2,20c30.1015,0,30.1015-20,60.203-20s30.1014,20,60.2029,20"></path>
+<p><text text-anchor="middle">
+<textPath class="my-text" href="#wavepath" startOffset="-40%">
+CONTACTEZ-NOUS 
+</textPath>
+</text></p>
+<p></svg>
+</div>
+<p></code></p>
+<p>JS</p>
+<p><code><br />
+if($('#contact').length){</p>
+<p>gsap.to(" .my-text", {<br />
+  scrollTrigger: {<br />
+    trigger: "#contact",<br />
+    toggleActions: "restart",<br />
+	  scrub:2,<br />
+	  start: "-230%"<br />
+  },<br />
+  duration: 2, </p>
+<p>  ease: "none",attr:{startOffset:'65%'}<br />
+});</p>
+<p>	}<br />
+</code></p>
+<p>CSS</p>
+<p><code></p>
+<p>svg.svgwave {<br />
+    width: 100%;<br />
+    height: auto;<br />
+    overflow: visible;<br />
+}</p>
+<p>svg.svgwave path {<br />
+    fill:transparent;<br />
+    stroke:transparent;<br />
+    stroke-width:1px;<br />
+}</p>
+<p>svg.svgwave text {<br />
+    font-size:20px;<br />
+    fill: white;<br />
+}</p>
+<p>svg.svgwave .my-text {<br />
+    letter-spacing: 2px;<br />
+    font-size: .7em;<br />
+}</p>
+<p>#path-text{</p>
+<p>	margin-top:6%;<br />
+}<br />
+</code></p>
+
+
+Titre: Mask image
+Contenu: <p><code><br />
+ img{<br />
+  -webkit-mask-image: url(https://www.domainedesflorets.com/wp-content/uploads/2022/06/1P5A5060ATorig.png);<br />
+  mask-image: url(https://www.domainedesflorets.com/wp-content/uploads/2022/06/1P5A5060ATorig.png);<br />
+  -webkit-mask-position: top left;<br />
+  mask-position: top left;<br />
+  -webkit-mask-repeat: no-repeat;<br />
+  mask-repeat: no-repeat;<br />
+  -webkit-mask-size: 100% 100%;<br />
+  mask-size: 100% 100%;<br />
+}</p>
+<p></code></p>
+
+
+Titre: Remove “Update Cart” button and Do It Automatically on Quantity Change
+Contenu: <p>CSS</p>
+<p><code><br />
+.woocommerce button[name="update_cart"],<br />
+.woocommerce input[name="update_cart"] {<br />
+	display: none;<br />
+}<br />
+</code></p>
+<p>JS</p>
+<p><code><br />
+	var timeout;</p>
+<p>	$('.woocommerce').on('change', 'input.qty', function(){</p>
+<p>		if ( timeout !== undefined ) {<br />
+			clearTimeout( timeout );<br />
+		}</p>
+<p>		timeout = setTimeout(function() {<br />
+			$("[name='update_cart']").trigger("click");<br />
+		}, 1000 ); // 1 second delay, half a second (500) seems comfortable too</p>
+<p>} );<br />
+</code></p>
+
+
+Titre: Randomize
+Contenu: <p><code><br />
+/****randomize***/<br />
+		function randomizePtf() {<br />
+			var cards = $('#portfolio-body .et_pb_team_member');<br />
+		for (var i = 0; i < cards.length; i++) {
+			var target = Math.floor(Math.random() * cards.length - 1) + 1;
+			var target2 = Math.floor(Math.random() * cards.length - 1) + 1;
+			cards.eq(target).before(cards.eq(target2));
+		}
+		}
+</code></p>
+
+
+Titre: php console.log
+Contenu: <p><code><br />
+function console_log(){<br />
+  echo '&lt;script&gt;';<br />
+  echo 'console.log(&quot;bhbhbh&quot;)';<br />
+  echo '&lt;/script&gt;';<br />
+}<br />
+</code></p>
+
+
+Titre: Recaptcha hide and show badge
+Contenu: <p>JS</p>
+<p><code><br />
+if ($('.et_pb_contact_form')<br />
+			.length) {<br />
+			$(window)<br />
+				.scroll(function() {<br />
+					var top_of_element = $(".et_pb_contact_form")<br />
+						.offset()<br />
+						.top;<br />
+					var bottom_of_element = $(".et_pb_contact_form")<br />
+						.offset()<br />
+						.top + $(".et_pb_contact_form")<br />
+						.outerHeight();<br />
+					var bottom_of_screen = $(window)<br />
+						.scrollTop() + $(window)<br />
+						.innerHeight();<br />
+					var top_of_screen = $(window)<br />
+						.scrollTop();<br />
+					if ((bottom_of_screen > top_of_element) && (top_of_screen < bottom_of_element)) {
+						$('.grecaptcha-badge')
+							.addClass('captcha-visible');
+					}
+					else {
+						$('.grecaptcha-badge')
+							.removeClass('captcha-visible');
+					}
+				})
+		}
+</code></p>
+<p>CSS</p>
+<p><code><br />
+.grecaptcha-badge:not(.captcha-visible) {<br />
+	right: -300px !important<br />
+}</p>
+<p>.grecaptcha-badge {}</p>
+<p></code></p>
+
+
+Titre: BACKWPUP Backup timout
+Contenu: <p><code><br />
+// BACKWPUP<br />
+function __extend_http_request_timeout( $timeout ) {<br />
+    return 60;<br />
+}<br />
+add_filter( 'http_request_timeout', '__extend_http_request_timeout' );</p>
+<p></code></p>
+
+
+Titre: Hover in / Out
+Contenu: <p><code><br />
+$('#thing').mouseenter(function() {<br />
+	$('.thing').addClass('hovered');<br />
+}).mouseleave(function() {<br />
+	$('.thing').removeClass('hovered');<br />
+});</p>
+<p></code></p>
+
+
+Titre: Draw SVG line on scroll
+Contenu: <p><code></p>
+<p>	/******* DRAW HOME SVG **********/<br />
+var path = document.querySelector('#home-svg-line-path');<br />
+var pathLength = path.getTotalLength() * 1.2;<br />
+path.style.strokeDasharray = pathLength + ' ' + pathLength;<br />
+path.style.strokeDashoffset = pathLength ;<br />
+path.getBoundingClientRect();<br />
+window.addEventListener("scroll", function(e) {<br />
+  var scrollPercentage = (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);<br />
+  var drawLength = pathLength * scrollPercentage;<br />
+  path.style.strokeDashoffset = pathLength - drawLength;<br />
+  if (scrollPercentage >= 0.99) {<br />
+    path.style.strokeDasharray = "none";</p>
+<p>  } else {<br />
+    path.style.strokeDasharray = pathLength + ' ' + pathLength;<br />
+  }<br />
+});</p>
+<p></code></p>
+<hr>
+<p><strong>Pour adapter le svg à la hauteur de page</strong></p>
+<p><code></p>
+<p>let homeHeight = ($('.home #wrap_all #main').innerHeight()) - ($('.home-full-header').innerHeight()/ 1);<br />
+	$('#home-svg-line').height(homeHeight);<br />
+</code></p>
+
+
+Titre: Aspect ratio image
+Contenu: <p><code></p>
+<p> img {<br />
+    aspect-ratio: 1/1;<br />
+    object-fit: cover;<br />
+}</p>
+<p></code></p>
+
+
+Titre: monster insight remove modal SEO
+Contenu: <p><code><br />
+var cookieKeywordRemove = document.querySelector('.cli-modal');<br />
+cookieKeywordRemove.parentNode.removeChild(cookieKeywordRemove);</p>
+<p>var cookieKeywordRemove2 = document.querySelector('#cookie-law-info-again');<br />
+cookieKeywordRemove2.parentNode.removeChild(cookieKeywordRemove2);<br />
+</code></p>
+<p>OLD</p>
+<p><code><br />
+	$('.cli-modal, #cookie-law-info-again').remove();/*SEO*/</p>
+<p></code></p>
+
+
+Titre: GEOCODE Maps sheets
+Contenu: <p><code><br />
+function getGeocodingRegion() {<br />
+  return PropertiesService.getDocumentProperties().getProperty('GEOCODING_REGION') || 'us';<br />
+}</p>
+<p>/*<br />
+function setGeocodingRegion(region) {<br />
+  PropertiesService.getDocumentProperties().setProperty('GEOCODING_REGION', region);<br />
+  updateMenu();<br />
+}<br />
+function promptForGeocodingRegion() {<br />
+  var ui = SpreadsheetApp.getUi();<br />
+  var result = ui.prompt(<br />
+    'Set the Geocoding Country Code (currently: ' + getGeocodingRegion() + ')',<br />
+    'Enter the 2-letter country code (ccTLD) that you would like ' +<br />
+    'the Google geocoder to search first for results. ' +<br />
+    'For example: Use \'uk\' for the United Kingdom, \'us\' for the United States, etc. ' +<br />
+    'For more country codes, see: https://en.wikipedia.org/wiki/Country_code_top-level_domain',<br />
+    ui.ButtonSet.OK_CANCEL<br />
+  );<br />
+  // Process the user's response.<br />
+  if (result.getSelectedButton() == ui.Button.OK) {<br />
+    setGeocodingRegion(result.getResponseText());<br />
+  }<br />
+}<br />
+*/</p>
+<p>function addressToPosition() {<br />
+  var sheet = SpreadsheetApp.getActiveSheet();<br />
+  var cells = sheet.getActiveRange();</p>
+<p>  // Must have selected 3 columns (Address, Lat, Lng).<br />
+  // Must have selected at least 1 row.</p>
+<p>  if (cells.getNumColumns() != 3) {<br />
+    Logger.log("Must select at least 3 columns: Address, Lat, Lng columns.");<br />
+    return;<br />
+  }</p>
+<p>  var addressColumn = 1;<br />
+  var addressRow;</p>
+<p>  var latColumn = addressColumn + 1;<br />
+  var lngColumn = addressColumn + 2;</p>
+<p>  var geocoder = Maps.newGeocoder().setRegion(getGeocodingRegion());<br />
+  var location;</p>
+<p>  for (addressRow = 1; addressRow <= cells.getNumRows(); ++addressRow) {
+    var address = cells.getCell(addressRow, addressColumn).getValue();
+    
+    // Geocode the address and plug the lat, lng pair into the 
+    // 2nd and 3rd elements of the current range row.
+    location = geocoder.geocode(address);
+   
+    // Only change cells if geocoder seems to have gotten a 
+    // valid response.
+    if (location.status == 'OK') {
+      lat = location["results"][0]["geometry"]["location"]["lat"];
+      lng = location["results"][0]["geometry"]["location"]["lng"];
+      
+      cells.getCell(addressRow, latColumn).setValue(lat);
+      cells.getCell(addressRow, lngColumn).setValue(lng);
+    }
+  }
+};
+
+function positionToAddress() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var cells = sheet.getActiveRange();
+  
+  // Must have selected 3 columns (Address, Lat, Lng).
+  // Must have selected at least 1 row.
+
+  if (cells.getNumColumns() != 3) {
+    Logger.log("Must select at least 3 columns: Address, Lat, Lng columns.");
+    return;
+  }
+
+  var addressColumn = 1;
+  var addressRow;
+  
+  var latColumn = addressColumn + 1;
+  var lngColumn = addressColumn + 2;
+  
+  var geocoder = Maps.newGeocoder().setRegion(getGeocodingRegion());
+  var location;
+  
+  for (addressRow = 1; addressRow <= cells.getNumRows(); ++addressRow) {
+    var lat = cells.getCell(addressRow, latColumn).getValue();
+    var lng = cells.getCell(addressRow, lngColumn).getValue();
+    
+    // Geocode the lat, lng pair to an address.
+    location = geocoder.reverseGeocode(lat, lng);
+   
+    // Only change cells if geocoder seems to have gotten a 
+    // valid response.
+    Logger.log(location.status);
+    if (location.status == 'OK') {
+      var address = location["results"][0]["formatted_address"];
+
+      cells.getCell(addressRow, addressColumn).setValue(address);
+    }
+  }  
+};
+
+function generateMenu() {
+  // var setGeocodingRegionMenuItem = 'Set Geocoding Region (Currently: ' + getGeocodingRegion() + ')';
+  
+  // {
+  //   name: setGeocodingRegionMenuItem,
+  //   functionName: "promptForGeocodingRegion"
+  // },
+  
+  var entries = [{
+    name: "Geocode Selected Cells (Address to   Lat, Long)",
+    functionName: "addressToPosition"
+  },
+  {
+    name: "Geocode Selected Cells (Address from Lat, Long)",
+    functionName: "positionToAddress"
+  }];
+  
+  return entries;
+}
+
+function updateMenu() {
+  SpreadsheetApp.getActiveSpreadsheet().updateMenu('Geocode', generateMenu())
+}
+
+/**
+ * Adds a custom menu to the active spreadsheet, containing a single menu item
+ * for invoking the readRows() function specified above.
+ * The onOpen() function, when defined, is automatically invoked whenever the
+ * spreadsheet is opened.
+ *
+ * For more information on using the Spreadsheet API, see
+ * https://developers.google.com/apps-script/service_spreadsheet
+ */
+function onOpen() {
+  SpreadsheetApp.getActiveSpreadsheet().addMenu('Geocode', generateMenu());
+  // SpreadsheetApp.getActiveSpreadsheet().addMenu('Region',  generateRegionMenu());
+  // SpreadsheetApp.getUi()
+  //   .createMenu();
+};
+</code></p>
+
+
+Titre: :after
+Contenu: <p><code><br />
+#thing h1:after {<br />
+    content: "";<br />
+    background: url(https://);<br />
+    position: absolute;<br />
+    right: -46px;<br />
+    top: -3px;<br />
+    height: 100%;<br />
+    width: 30px;<br />
+    background-position: center;<br />
+    background-size: contain;<br />
+    background-repeat: no-repeat;<br />
+    background-position: center;<br />
+}<br />
+</code></p>
+<p><code><br />
+#thing:after {<br />
+    content: "";<br />
+    position: absolute;<br />
+    width: 100%;<br />
+    height: 100%;<br />
+    top: -1%;<br />
+    left: 1%;<br />
+    background: red;<br />
+    z-index: -1;<br />
+}</p>
+<p></code></p>
+
+
+Titre: Ajax recupérer contenu autre page
+Contenu: <p><code></p>
+<p>$('#artist-list a').hover(function(){<br />
+		let artistInListUrl = $(this).attr('href');<br />
+		console.log(artistInListUrl);<br />
+		$.ajax({ url: artistInListUrl, dataType: 'html', success: function(response) { $('#img-recept').html(jQuery(response).find('.et_portfolio_image').html()); } });</p>
+<p>	})</p>
+<p></code></p>
+
+
+Titre: 100vh mobile
+Contenu: <p><strong>JS</strong><br />
+<code><br />
+function appHeight() {<br />
+  const doc = document.documentElement<br />
+  doc.style.setProperty('--vh', (window.innerHeight*.01) + 'px');<br />
+}</p>
+<p>window.addEventListener('resize', appHeight);<br />
+appHeight();<br />
+</code><br />
+<strong><br />
+CSS</strong><br />
+<code><br />
+#refresh{<br />
+	height: 100vh; /* Fallback for browsers that do not support Custom Properties */<br />
+  height: calc(var(--vh, 1vh) * 100);<br />
+}</code></p>
+
+
+Titre: // Check scrollinginside div (middle, top, bottom)
+Contenu: <p><code><br />
+	// Check scrollinginside div (middle, top, bottom)</p>
+<p>	 $('#offre-scrollblock-txt').bind('scroll',chk_scroll);</p>
+<p>function chk_scroll(e)<br />
+{<br />
+    var elem = $(e.currentTarget);</p>
+<p>	if(elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight())<br />
+    {<br />
+        console.log("bottom");<br />
+		$('#offre-scrollblock-img').css('background-image','url(https://kasoo.fr/wp-content/uploads/2021/04/edit_2.jpg)');<br />
+    }<br />
+	else if ( elem.scrollTop() > elem.outerHeight() / 2)<br />
+    {<br />
+        console.log("middle");<br />
+		$('#offre-scrollblock-img').css('background-image','url(https://kasoo.fr/wp-content/uploads/2021/04/edit_1.jpg)');<br />
+    }</p>
+<p>	else if ( elem.scrollTop() > elem.outerHeight() / 4)<br />
+    {<br />
+        console.log("quart");<br />
+		$('#offre-scrollblock-img').css('background-image','url(https://kasoo.fr/wp-content/uploads/2021/04/edit_6.jpg)');<br />
+    }<br />
+	else if ( elem.scrollTop() == 0)<br />
+    {<br />
+        console.log("top");<br />
+		$('#offre-scrollblock-img').css('background-image','url(https://kasoo.fr/wp-content/uploads/2021/04/edit_5.jpg)');<br />
+    }</p>
+<p>}</p>
+<p></code></p>
+
+
+Titre: CF7 Email confirmation
+Contenu: <p><code><br />
+// ---------------- CF7 EMAIL CONFIRM</p>
+<p>add_filter( 'wpcf7_validate_email*', 'custom_email_confirmation_validation_filter', 20, 2 );</p>
+<p>function custom_email_confirmation_validation_filter( $result, $tag ) {<br />
+  if ( 'your-email-confirm' == $tag-&gt;name ) {<br />
+    $your_email = isset( $_POST['your-email'] ) ? trim( $_POST['your-email'] ) : '';<br />
+    $your_email_confirm = isset( $_POST['your-email-confirm'] ) ? trim( $_POST['your-email-confirm'] ) : '';</p>
+<p>    if ( $your_email != $your_email_confirm ) {<br />
+      $result-&gt;invalidate( $tag, &quot;Les adresses email doivent correspondre&quot; );<br />
+    }<br />
+  }</p>
+<p>  return $result;<br />
+}</p>
+<p></code></p>
+
+
+Titre: Link To Filterable Portfolio Module Filter Via URL Hash
+Contenu: <p><a href="https://freshysites.com/web-design-development/link-to-filterable-portfolio-module-filter-via-url-hash/?__cf_chl_captcha_tk__=0e356635ffdf40df0ccd91b4ba4337c87bbef245-1615279718-0-AfYjWuLEgXW3LD6FZkHKtJI4EAIXguWhuQOx5Wt_g3qbKNhB0MRSyKXRdGoJ391s4jQsA-gEg65MmrFq07qSbcnGtwgPSZlvxM01bpmDUq013_ior49dooPU56R39E4b61KtbqxL-FKs9-pfNjplN2GOISawnaVPWocEBleDrxhEcXYKaypANOJ-iUTEwXehnlFZh5ZzfCY9n0ib7f8J-dC_ZWX8Npy7HgmGhB34sPkBjOjteDEKvUM4bUMTy6DJLCIXDipDk0gCsmPqetB5Hgmtmj6XgSXYwo_xZzQCZ5b28miDwCVPyj4Eg_Pq3-iqJKI-5O7f6PYUbu6zzgwzZJ9X9vHKpGU3XajmfSJy_nFJsKH3-uVinhGB9TRYNMQFYyYmyzbXIb5zQUq8QOu3aU3wnnKVukCv6JCbGLZ18wxAUtVvhkBrEaDegcOi9Q7pl_RynF-Nvolie7ZqWt7TZe6tZW_BqO63ZH3AOmZ_7g3si-bekcXpQ8YF6gDX6wRgRVbqmZc37ew4Mg1acJyUbn7EVKxW8bwktUc3jP47-yy5EYAGy22Uus_ZaSTKA0WIbhJcuzM8T5trTTzMiXEFuNmAdTatfzliAWIH-hc86SsECiuBOHGyqIh-TxlcRxEUIKskZPC646gXW_TuAu7rJaM" target="_blank" rel="noopener noreferrer">Article</a></p>
+<p><code><br />
+$(window).load(function(){<br />
+// find the hash in the URL and removes the #<br />
+var et_hash = window.location.hash.substr(1);<br />
+var et_filter = $( '.et_pb_portfolio_filter a[data-category-slug="' + et_hash + '"]' );</p>
+<p>if(window.location.hash && et_filter.length) {<br />
+// if it finds a hash and the filter exists, then add the active class<br />
+$(et_filter).addClass('active')</p>
+<p>// removes the active class from the all filter<br />
+$( '.et_pb_portfolio_filter a[data-category-slug="all"]' ).removeClass('active')<br />
+}<br />
+});</p>
+<p></code></p>
+
+
+Titre: tswd-year
+Contenu: <p>HTML</p>
+<p><code><br />
+&copy; &lt;span class=&quot;tswd-year&quot;&gt;2021&lt;/span&gt;<br />
+</code></p>
+<p>JS</p>
+<p><code><br />
+const tswdYear = new Date().getFullYear();<br />
+$('.tswd-year').text(tswdYear);<br />
+</code></p>
+
+
+Titre: WOO France only
+Contenu: <p><code><br />
+//-------------------France payment only-------------------------</p>
+<p>add_filter( 'woocommerce_available_payment_gateways', 'allow_france_only' );</p>
+<p>function allow_france_only( $available_gateways ) {<br />
+    if ( is_admin() ) {<br />
+        return $available_gateways;<br />
+    }<br />
+    if (  WC()-&gt;customer-&gt;get_billing_country() != 'FR' ) {<br />
+        unset( $available_gateways );<br />
+    }<br />
+    return $available_gateways;<br />
+}</p>
+<p>add_filter( 'woocommerce_no_available_payment_methods_message', 'no_payment_text' );<br />
+function no_payment_text( $content ) {<br />
+    //your changes here<br />
+    $content = &quot;Commande en France uniquement&quot;;<br />
+    // Returns the content.<br />
+    return $content;<br />
+}</p>
+<p></code></p>
+
+
+Titre: Popup builder on scroll
+Contenu: <p>Avec snippet is on screen</p>
+<p><code><br />
+			if ($('.popup-click').isOnScreen()) {<br />
+				if ($('.popup-click.hovered-yet').length === 0) {<br />
+					var ls = localStorage.getItem('namespace.visited');<br />
+					if (ls == null) {<br />
+						$('.popup-click').addClass('hovered-yet');<br />
+						var popupObj = SGPBPopup.createPopupObjById(902);<br />
+						popupObj.prepareOpen();<br />
+						console.log("Your first visit");<br />
+						localStorage.setItem('namespace.visited', 1);<br />
+						//<br />
+					} else {<br />
+						console.log("NOT Your first visit");<br />
+					}<br />
+				}<br />
+			}<br />
+</code></p>
+
+
+Titre: text cleaner to url (2 tools web)
+Contenu: <p>1/ <a href="https://www.smartwebsolutions.org/replace-space-with-hyphen/" target="_blank" rel="noopener noreferrer">https://www.smartwebsolutions.org/replace-space-with-hyphen/</a></p>
+<p>2/ <a href="https://www.unit-conversion.info/texttools/remove-letter-accents/" target="_blank" rel="noopener noreferrer">https://www.unit-conversion.info/texttools/remove-letter-accents/</a></p>
+
+
+Titre: Redirection si version php
+Contenu: <p><code><br />
+console.log('redirection selon version php');</p>
+<p>$version = phpversion();</p>
+<p>console.log($version);</p>
+<p>if ($version &lt; 6){<br />
+	//echo &quot;inferieur a 6&quot;;</p>
+<p>header('Location: index-front.php');<br />
+  	die(); </p>
+<p>}<br />
+else {<br />
+	//echo &quot;superieur a 6&quot;;<br />
+	header('Location: working.html');<br />
+  	die();<br />
+}</p>
+<p></code></p>
+
+
+Titre: Remplacer balise par une autre
+Contenu: <p><code></p>
+<p>$('#collection .et_pb_slide_0').find('h2').replaceWith(function() {<br />
+    return '&lt;h1&gt;' + $(this).text() + '&lt;/h1&gt;';<br />
+});</p>
+<p></code></p>
+
+
+Titre: Polylang FR | EN
+Contenu: <p>JS</p>
+<p><code><br />
+$('.menu-item.lang-item-fr a').text('FR');<br />
+	$('.menu-item.lang-item-en a').text('EN');<br />
+	$('.menu-item.lang-item-fr').append(' <span> | </span> ').append($('.menu-item.lang-item-en a'));<br />
+</code></p>
+<p>CSS </p>
+<p><code><br />
+.lang-item{<br />
+	display:flex;<br />
+	align-items:center;<br />
+}<br />
+.lang-item span{<br />
+	    margin: 0 9px;<br />
+}</p>
+<p></code></p>
+
+
+Titre: Divi jumpy header
+Contenu: <p><code><br />
+(function(){<br />
+    // Override the addClass to prevent fixed header class from being added<br />
+    var addclass = jQuery.fn.addClass;<br />
+    jQuery.fn.addClass = function(){<br />
+        var result = addclass.apply(this, arguments);<br />
+            jQuery('#main-header').removeClass('et-fixed-header');<br />
+        return result;<br />
+    }<br />
+})();<br />
+jQuery(function($){<br />
+    $('#main-header').removeClass('et-fixed-header');<br />
+});<br />
+</code></p>
+
+
+Titre: Divi form requiered field Asterisk
+Contenu: <p><code><br />
+	//------- DIVI FORM REQUIERED ASTERISK -----------</p>
+<p>	$('input[data-required_mark="required"]').each(function(){<br />
+		var placeH = $(this).attr('placeholder');<br />
+		var newPlaceH = placeH + ' *';<br />
+		$(this).attr('placeholder', newPlaceH);<br />
+	})</p>
+<p></code></p>
+
+
+Titre: Enlever texte &#8211; balises html d&#8217;une chaine / Remove text from string
+Contenu: <p><code><br />
+	$('.woocommerce-cart td.product-name a').each(function(){<br />
+		var htmlName = $(this).text();<br />
+		var textName = htmlName.replace('<br />', '').replace('<span>', '').replace('</span>', '');</p>
+<p>	$(this).text(textName);<br />
+	});</p>
+<p></code></p>
+
+
+Titre: Enlever taille image src / Enlever texte d&#8217;une string
+Contenu: <p><code><br />
+// Enlever taille resize image / Enlever texte en en fin d'url / images full</p>
+<p>$("img[src*='-400x284']").each(function() {<br />
+			$(this).attr("src", $(this).attr("src").replace(/\-400x284/g, ""));<br />
+		});</p>
+<p></code></p>
+
+
+Titre: No img titles on hover
+Contenu: <p><code><br />
+//----------- DONT DISPLAY IMG TITLES----------------<br />
+$("img").hover(function () {<br />
+var title = $(this).attr("title");<br />
+$(this).attr("tmp_title", title);<br />
+$(this).attr("title", "");<br />
+},function () {<br />
+$(this).attr("title", $(this).attr("tmp_title"));<br />
+});<br />
+</code></p>
+
+
+Titre: Vendre par multiple de 6
+Contenu: <p><code><br />
+// check that cart items quantities totals are in multiples of 6<br />
+add_action( 'woocommerce_check_cart_items', 'woocommerce_check_cart_quantities' );<br />
+function woocommerce_check_cart_quantities() {<br />
+  	$multiples = 6;<br />
+	$total_products = 0;<br />
+	foreach ( WC()-&gt;cart-&gt;get_cart() as $cart_item_key =&gt; $values ) {<br />
+		$total_products += $values['quantity'];<br />
+	}<br />
+	if ( ( $total_products % $multiples ) &gt; 0 )<br />
+		wc_add_notice( sprintf( __('You need to buy in quantities of %s products', 'woocommerce'), $multiples ), 'error' );<br />
+}</p>
+<p>// Limit cart items with a certain shipping class to be purchased in multiple only<br />
+add_action( 'woocommerce_check_cart_items', 'woocommerce_check_cart_quantities_for_class' );<br />
+function woocommerce_check_cart_quantities_for_class() {<br />
+  	$multiples = 6;<br />
+  	$class = 'bottle';<br />
+	$total_products = 0;<br />
+	foreach ( WC()-&gt;cart-&gt;get_cart() as $cart_item_key =&gt; $values ) {<br />
+		$product = get_product( $values['product_id'] );<br />
+		if ( $product-&gt;get_shipping_class() == $class ) {<br />
+			$total_products += $values['quantity'];<br />
+		}<br />
+	}<br />
+	if ( ( $total_products % $multiples ) &gt; 0 )<br />
+		wc_add_notice( sprintf( __('You need to purchase bottles in quantities of %s', 'woocommerce'), $multiples ), 'error' );<br />
+}</p>
+<p></code></p>
+
+
+Titre: Refresh on breakpoint
+Contenu: <p><code><br />
+	/*_,.-'~'-.,__,.-'~'-.,__,.-'-  REFRESH ON BREAKPOINT -.,__,.-'~'-.,__,.-'~'-.,_*/</p>
+<p>	var $window = $(window);<br />
+		var breakpoint = 980;<br />
+		var last = $window.width() > breakpoint;</p>
+<p>		$window.on('resize', function() {<br />
+			var wWwidth = $window.width();<br />
+			var isLarger = wWwidth > breakpoint</p>
+<p>			if (last !== isLarger) {<br />
+				if (isLarger) {<br />
+					onLargerChange();<br />
+				} else {<br />
+					onSmallerChange();<br />
+				}<br />
+				last = isLarger;<br />
+			}<br />
+		});</p>
+<p>		function onLargerChange() {<br />
+			console.log('larger ');<br />
+			document.location.reload(true);<br />
+		}</p>
+<p>		function onSmallerChange() {<br />
+			console.log('smaller ');<br />
+			document.location.reload(true);<br />
+		}<br />
+</code></p>
+
+
+Titre: Order Test &#8211; Fake Pay
+Contenu: <p><code></p>
+<p>/**<br />
+ * Name: WooCommerce Order Test<br />
+ * URI:  https://www.wpfixit.com<br />
+ */</p>
+<p>function sb_wc_test_init() {<br />
+	if (!class_exists('WC_Payment_Gateway')) {<br />
+		return;<br />
+	}</p>
+<p>	class WC_Gateway_sb_test extends WC_Payment_Gateway {</p>
+<p>		public function __construct() {<br />
+			$this->id = 'sb_test';<br />
+			$this->has_fields = false;<br />
+			$this->method_title = __( 'Order Test', 'woocommerce' );<br />
+			$this->init_form_fields();<br />
+			$this->init_settings();<br />
+			$this->title = 'Order Test Gateway';</p>
+<p>			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );<br />
+		}</p>
+<p>		function init_form_fields() {<br />
+			$this->form_fields = array(<br />
+				'enabled' => array(<br />
+					'title' => __( 'Enable/Disable', 'woocommerce' ),<br />
+					'type' => 'checkbox',<br />
+					'label' => __( 'Enable order test gateway', 'woocommerce' ),<br />
+					'default' => 'yes'<br />
+				)<br />
+			);<br />
+		}</p>
+<p>		public function admin_options() {<br />
+			echo '	</p>
+<h3>Order Test Gateway</h3>
+<p></p>
+<p>Enable this below to test the checkout process on your site.  Only admin users will see this option on the checkout page.</p>
+<table class="form-table">';</p>
+<p>			$this->generate_settings_html();</p>
+<p>			echo '	</table>
+<p>';<br />
+		}</p>
+<p>		public function process_payment( $order_id ) {<br />
+			global $woocommerce;</p>
+<p>			$order = new WC_Order( $order_id );<br />
+			$order->payment_complete();<br />
+			$order->reduce_order_stock();<br />
+			$woocommerce->cart->empty_cart();</p>
+<p>			return array(<br />
+				'result' => 'success',<br />
+				//'redirect' => add_query_arg('key', $order->order_key, add_query_arg('order', $order->id, get_permalink(woocommerce_get_page_id('thanks')))),<br />
+				'redirect' => $order->get_checkout_order_received_url()<br />
+			);<br />
+		}</p>
+<p>	}	</p>
+<p>	function add_sb_test_gateway( $methods ) {<br />
+			$methods[] = 'WC_Gateway_sb_test';</p>
+<p>		return $methods;<br />
+	}</p>
+<p>	add_filter('woocommerce_payment_gateways', 'add_sb_test_gateway' );</p>
+<p>}</p>
+<p>add_filter('plugins_loaded', 'sb_wc_test_init' );</p>
+<p></code></p>
+
+
+Titre: Disable Dashicons on front-end
+Contenu: <p><code><br />
+// ----Disable Dashicons on front-end </p>
+<p>function wpdocs_dequeue_dashicon() {<br />
+        if (current_user_can( 'update_core' )) {<br />
+            return;<br />
+        }<br />
+        wp_deregister_style('dashicons');<br />
+}<br />
+add_action( 'wp_enqueue_scripts', 'wpdocs_dequeue_dashicon' );<br />
+</code></p>
+
+
+Titre: Copier le contenu d&#8217;une page ou d&#8217;un post à la création d&#8217;une traduction POLYLANG
+Contenu: <p><code></p>
+<p>// Copier le contenu d'une page ou d'un post à la création d'une traduction<br />
+function cw2b_content_copy( $content ) {<br />
+    if ( isset( $_GET['from_post'] ) ) {<br />
+        $my_post = get_post( $_GET['from_post'] );<br />
+        if ( $my_post )<br />
+            return $my_post->post_content;<br />
+    }<br />
+    return $content;<br />
+}<br />
+add_filter( 'default_content', 'cw2b_content_copy' );</p>
+<p></code></p>
+
+
+Titre: Divi Google Fonts = display swap (seo)
+Contenu: <p><code><br />
+//------------DIVI ADD DISPLAY SWAP TO FONTS GOOGLE</p>
+<p>// Remove Divi's function<br />
+add_action( 'init', function () {<br />
+	remove_action( 'wp_enqueue_scripts', 'et_builder_preprint_font' );<br />
+});</p>
+<p>// Add our modified font-swapper<br />
+function et_builder_preprint_font_replacement() {<br />
+	// Return if this is not a post or a page<br />
+	if ( ! is_singular() || ! et_core_use_google_fonts() ) {<br />
+		return;<br />
+	}</p>
+<p>	$post_id = get_the_ID();</p>
+<p>	$post_fonts_data = get_post_meta( $post_id, 'et_enqueued_post_fonts', true );</p>
+<p>	// No need to proceed if the proper data is missing from the cache<br />
+	if ( ! is_array( $post_fonts_data ) || ! isset( $post_fonts_data['family'], $post_fonts_data['subset'] ) ) {<br />
+		return;<br />
+	}</p>
+<p>	$fonts = $post_fonts_data[ 'family'];</p>
+<p>	if ( ! $fonts ) {<br />
+		return;<br />
+	}</p>
+<p>	$unique_subsets = $post_fonts_data[ 'subset'];<br />
+	$protocol       = is_ssl() ? 'https' : 'http';</p>
+<p>	wp_enqueue_style( 'et-builder-googlefonts-cached', esc_url( add_query_arg( array(<br />
+		'family' => implode( '|', $fonts ) ,<br />
+		'subset' => implode( ',', $unique_subsets ),<br />
+		'display' => 'swap',<br />
+	), "$protocol://fonts.googleapis.com/css" ) ) );<br />
+}<br />
+add_action( 'wp_enqueue_scripts', 'et_builder_preprint_font_replacement', 10, 2 );<br />
+</code></p>
+
+
+Titre: Product category on body class
+Contenu: <p><code></p>
+<p>/**<br />
+ * @snippet       Product Category > Body CSS Class @ Single Product<br />
+ * @how-to        Get CustomizeWoo.com FREE<br />
+ * @author        Rodolfo Melogli<br />
+ * @testedwith    WooCommerce 3.9<br />
+ * @donate $9     https://businessbloomer.com/bloomer-armada/<br />
+ */</p>
+<p>add_filter( 'body_class', 'bbloomer_wc_product_cats_css_body_class' );</p>
+<p>function bbloomer_wc_product_cats_css_body_class( $classes ){<br />
+  if ( is_singular( 'product' ) ) {<br />
+    $current_product = wc_get_product();<br />
+    $custom_terms = get_the_terms( $current_product->get_id(), 'product_cat' );<br />
+    if ( $custom_terms ) {<br />
+      foreach ( $custom_terms as $custom_term ) {<br />
+        $classes[] = 'product_cat_' . $custom_term->slug;<br />
+      }<br />
+    }<br />
+  }<br />
+  return $classes;<br />
+}</p>
+<p></code></p>
+
+
+Titre: JS event added to cart
+Contenu: <p><code><br />
+$( 'body' ).on( 'added_to_cart', function( e, fragments, cart_hash, this_button ) {<br />
+    alert('product added to cart');<br />
+} );</p>
+<p></code></p>
+
+
+Titre: Harmoniser Tailles / Attribuer taille la plus grande aux autres
+Contenu: <p><code><br />
+var hauteur = 0;<br />
+$('.et_pb_gallery_image').each(function() {<br />
+    if ($(this).height() > hauteur) hauteur = $(this).height();<br />
+});</p>
+<p>$('.et_pb_gallery_image').each(function() {<br />
+    $(this).height(hauteur);<br />
+});<br />
+</code></p>
+
+
+Titre: Panier dynamique Woo Cart number items
+Contenu: <p>A placer dans fichier template<br />
+<code><br />
+&lt;a href=&quot;&lt;?php echo wc_get_cart_url() ?&gt;&quot; class=&quot;misha-cart&quot;&gt;&lt;?php echo $woocommerce-&gt;cart-&gt;cart_contents_count ?&gt;&lt;/a&gt;<br />
+</code></p>
+<p>A placer dans functions</p>
+<p><code><br />
+add_filter( 'woocommerce_add_to_cart_fragments', 'misha_add_to_cart_fragment' );</p>
+<p>function misha_add_to_cart_fragment( $fragments ) {</p>
+<p>	global $woocommerce;</p>
+<p>	$fragments['.misha-cart'] = '&lt;a href=&quot;' . wc_get_cart_url() . '&quot; class=&quot;misha-cart&quot;&gt;'. $woocommerce-&gt;cart-&gt;cart_contents_count . '&lt;/a&gt;';<br />
+ 	return $fragments;</p>
+<p> }<br />
+</code></p>
+
+
+Titre: 404 to homepage WP
+Contenu: <p><code><br />
+// 404 to homepage</p>
+<p>add_action('wp', function() {<br />
+	if (!is_admin() && is_404()) {<br />
+		if ( (defined('DOING_CRON') && DOING_CRON) || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) ) {<br />
+			return;<br />
+		}<br />
+		if ( (function_exists('is_bbpress') && is_bbpress()) || (function_exists('bp_is_user_profile') && bp_is_user_profile()) ) {<br />
+			return;<br />
+		}<br />
+		wp_redirect(esc_url_raw(home_url()), 301);<br />
+		die;<br />
+	}<br />
+});<br />
+</code></p>
+
+
+Titre: Auto image alt with image title
+Contenu: <p><code><br />
+$("img").each(function() {<br />
+      var img_src = jQuery(this).attr('src');<br />
+      if (typeof img_src !== typeof undefined && img_src !== false) {<br />
+      var img_alt = jQuery(this).attr('alt');<br />
+      var str = img_src<br />
+      var pieces = str.split('/');<br />
+      var imgName = pieces[pieces.length-1];<br />
+      var imgnameArray = imgName.split('.');<br />
+      var alt = imgnameArray[0];<br />
+	  if(img_alt == '' || typeof img_alt === typeof undefined || img_alt === false) {<br />
+        jQuery(this).attr('alt',alt);<br />
+	  }<br />
+      }<br />
+  });<br />
+</code></p>
+
+
+Titre: Page slug to body class &#8211; php
+Contenu: <p><code><br />
+//Page Slug Body Class<br />
+function add_slug_body_class( $classes ) {<br />
+global $post;<br />
+if ( isset( $post ) ) {<br />
+$classes[] = $post-&gt;post_type . '-' . $post-&gt;post_name;<br />
+}<br />
+return $classes;<br />
+}<br />
+add_filter( 'body_class', 'add_slug_body_class' );<br />
+</code></p>
+
+
+Titre: Slider Divi &#8211; Description fixe
+Contenu: <p><code><br />
+.et_pb_slide_description {<br />
+    -webkit-animation-duration: 0s !important;<br />
+    animation-duration: 0s !important;</p>
+<p>	animation-delay:0s !important;<br />
+	margin-top:-20%;<br />
+}<br />
+</code></p>
+
+
+Titre: Touche echap
+Contenu: <p><code><br />
+$(document).on('keydown', function(event) {<br />
+       if (event.key == "Escape") {<br />
+          $('.popup-ptf-close').click();<br />
+       }<br />
+});<br />
+</code></p>
+
+
+Titre: Woo &#8211; enelever téléchargements &#8211; mon compte
+Contenu: <p><code><br />
+/*------- ENLEVER PARTIE TELECHARGEMENTS DANS PAGE MON COMPTE ---*/</p>
+<p>function CM_woocommerce_account_menu_items_callback($items) {<br />
+    unset( $items['downloads'] );<br />
+    return $items;<br />
+}<br />
+add_filter('woocommerce_account_menu_items', 'CM_woocommerce_account_menu_items_callback', 10, 1);<br />
+</code></p>
+
+
+Titre: Retour / History back
+Contenu: <p><code><br />
+//------ BOUTON HISTORY BACK</p>
+<p>    $('#shop-retour').click(function(e) {<br />
+		e.preventDefault();<br />
+        history.back();<br />
+    })</p>
+<p></code></p>
+
+
+Titre: Se connecter au backoffice du site
+Contenu: <p>&nbsp;</p>
+<p><img decoding="async" class="size-full wp-image-1090 aligncenter" src="https://admin.tswd.fr/wp-content/uploads/2019/11/wordpress-login-url-techwelkin.jpg" alt="" width="354" height="333" srcset="https://admin.tswd.fr/wp-content/uploads/2019/11/wordpress-login-url-techwelkin.jpg 354w, https://admin.tswd.fr/wp-content/uploads/2019/11/wordpress-login-url-techwelkin-300x282.jpg 300w" sizes="(max-width: 354px) 100vw, 354px" /></p>
+<p>&nbsp;</p>
+<p>1/ Tapez <b>l&#8217;adresse de votre site</b> dans la barre d&#8217;adresse de votre navigateur. Ajoutez à la fin /wp-admin</p>
+<p>2/ Identifiez-vous en saisissant vos identifiant et mot de passe puis cliquez sur Se connecter.</p>
+
+
+Titre: Publier une actualité
+Contenu: <p>Dans votre menu de gauche, allez sur « <b>PUBLIER UN ARTICLE</b> » et cliquez sur « <b>AJOUTER</b> »</p>
+<p>&nbsp;</p>
+<p><img decoding="async" class="wp-image-1084 aligncenter" src="https://admin.tswd.fr/wp-content/uploads/2019/11/ajouter-un-article-WordPress.jpg" alt="" width="575" height="320" /></p>
+<p>&nbsp;</p>
+<p><strong>Rédigez votre article</strong><br />
+Saisissez maintenant le titre de votre article. Notez que le titre est l’élément primordial pour rendre votre article attractif et pour le référencement !</p>
+<p>Collez maintenant dans l’éditeur de texte le texte que vous avez préparé au préalable sur Word. Tout un tas de petits outils très intuitifs vous permettent maintenant d’insérer des sous-titres, de modifier la couleur de votre texte, de le justifier, et bien plus…</p>
+<p><strong>Choisir une image de couverture</strong><br />
+Dans la barre de droite choisir une « <b>IMAGE DE MISE EN AVANT</b> » (format paysage conseillé)</p>
+<p><strong>Intégrer des images dans l&#8217;article</strong><br />
+Vous pouvez aussi intégrer des images ou des médias. Pour cela, positionnez le curseur de la souris à l’endroit désiré, et cliquez sur « AJOUTER UN MEDIA ».</p>
+<p>Choisissez maintenant votre image. Vous pouvez soit la sélectionner dans votre bibliothèque WordPress, soit la télécharger depuis votre ordinateur.</p>
+<p>Sur la droite, en dessous de « <b>DETAIL DU FICHIER ATTACHE</b> », vous allez définir l’alignement de l’image (à gauche de votre texte, à droite ou centré), ainsi que sa taille.</p>
+<p>Cliquez maintenant sur « <b>INSERER DANS L’ARTICLE</b> » L’image apparaît dans votre éditeur.</p>
+<p>Il est encore temps d’apporter des modifications à cette image, si le format ou l’emplacement ne vous conviennent pas.</p>
+<p>Sélectionnez l’image, à l’aide de la souris. Cliquez sur le crayon qui apparaît sur la gauche de l’image. Une boite de dialogue s’ouvre et vous permet de régler tous les détails.</p>
+<p><strong>Validez en cliquant sur « METTRE A JOUR »</strong></p>
+
+
+Titre: Modifier le contenu d&#8217;une page
+Contenu: <p>1/ Dans votre menu de gauche, allez sur « <b>PAGES</b> » et cliquer ensuite sur la page à modifier</p>
+<p><img decoding="async" class="alignnone size-full wp-image-1113" src="https://admin.tswd.fr/wp-content/uploads/2020/02/option-affichage-ecran-editeur-page.jpg" alt="" width="128" height="211" /></p>
+<p>2/ Une fois la page ouverte, une interface simplifiée vous attend pour modifier le contenu (DIVI):</p>
+<p>il suffit de cliquer sur l&#8217;icone   <img decoding="async" class="wp-image-1112 alignnone" src="https://admin.tswd.fr/wp-content/uploads/2020/02/588a64e7d06f6719692a2d11-300x300.png" alt="" width="14" height="14" />   d&#8217;un bloc et un menu contextuel s&#8217;ouvre. Modifier le texte ou l&#8217;image. Enregistrez en cliquant sur le bouton « <b>ENREGISTRER ET QUITTER</b> » du menu contextuel</p>
+<p>Une fois les modifications apportées cliquer sur le bouton « <b>METTRE A JOUR </b> » dans la barre latérale gauche</p>
+<p>&nbsp;</p>
+<p><strong>Exemples :</strong></p>
+<p>&nbsp;</p>
+<p><img decoding="async" class="alignnone wp-image-1111 " src="https://admin.tswd.fr/wp-content/uploads/2020/02/divi-builder.gif" alt="" width="894" height="487" /></p>
+<p>&nbsp;</p>
+<p><img decoding="async" class="alignnone wp-image-1108 size-full" src="https://admin.tswd.fr/wp-content/uploads/2020/02/bfb13.gif" alt="" width="892" height="582" /></p>
+
+
+Titre: Créer et gérer ses adresses e-mail
+Contenu: <p><img decoding="async" class="wp-image-1094 alignright" src="https://admin.tswd.fr/wp-content/uploads/2019/12/logo-ovh-300x242.jpg" alt="" width="64" height="52" /></p>
+<p>1/ Se connecter à votre hébergeur OVH en cliquant <a href="https://www.ovh.com/auth/?action=gotomanager&amp;from=https://www.ovh.com/fr/" target="_blank" rel="noopener noreferrer">ici</a></p>
+<p>2/ RDV Dans la partie <b>E-mail</b> de votre compte et cliquer sur votre nom de domaine</p>
+<p>3/ Pour créer une nouvelle adresse e-mail, cliquer sur l’onglet <b>E-mail</b>. La fenêtre qui apparaît affiche les comptes e-mail déjà disponibles, ainsi que ceux que vous pouvez encore créer. Cliquez alors sur le bouton <b>Créer un compte E-mail.</b></p>
+<p>&nbsp;</p>
+<p><img decoding="async" class="alignnone size-full wp-image-930" src="https://admin.tswd.fr/wp-content/uploads/2019/12/mxplan-creation-new-step2.png" alt="" width="1077" height="479" srcset="https://admin.tswd.fr/wp-content/uploads/2019/12/mxplan-creation-new-step2.png 1077w, https://admin.tswd.fr/wp-content/uploads/2019/12/mxplan-creation-new-step2-300x133.png 300w, https://admin.tswd.fr/wp-content/uploads/2019/12/mxplan-creation-new-step2-1024x455.png 1024w, https://admin.tswd.fr/wp-content/uploads/2019/12/mxplan-creation-new-step2-768x342.png 768w, https://admin.tswd.fr/wp-content/uploads/2019/12/mxplan-creation-new-step2-600x267.png 600w" sizes="(max-width: 1077px) 100vw, 1077px" /></p>
+<p>&nbsp;</p>
+<p>3/ Dans la fenêtre qui s’affiche, renseignez les informations demandées<span class="widont"> </span>:</p>
+<p>&nbsp;</p>
+<table>
+<thead>
+<tr>
+<th>Information</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compte e-mail</td>
+<td>Un nom temporaire est déjà prérempli dans la zone de texte : supprimez-le et renseignez celui que portera votre adresse e-mail (votre prénom.nom, par exemple). Le nom de domaine composant l&#8217;adresse e-mail est déjà présélectionné dans la liste.</td>
+</tr>
+<tr>
+<td>Prénom</td>
+<td>Renseignez un prénom.</td>
+</tr>
+<tr>
+<td>Nom</td>
+<td>Renseignez un nom.</td>
+</tr>
+<tr>
+<td>Nom à afficher</td>
+<td>Indiquez le nom qui s&#8217;affichera en tant qu&#8217;expéditeur lorsque des e-mails seront envoyés avec cette adresse.</td>
+</tr>
+<tr>
+<td>Mot de passe</td>
+<td>Définissez un mot de passe et confirmez-le. Pour des raisons de sécurité, nous vous recommandons de ne pas utiliser deux fois le même mot de passe, d&#8217;en choisir un qui n&#8217;a aucun rapport avec vos informations personnelles (évitez les mentions à vos nom, prénom et date de naissance, par exemple) et de le renouveler régulièrement.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><b>Vous pouvez valider, votre nouvelle adresse est créée.</b></p>
+<p>&nbsp;</p>
+<p><em>Pour utiliser la boite mail OVH</em> , rendez-vous sur <a href="https://www.ovh.com/fr/mail/" target="_blank" rel="noopener noreferrer">le WEBMAIL OVH</a> et/ou :</p>
+<p>&nbsp;</p>
+<p><em>Vous pouvez <b>configurer votre nouvelle adresse sur votre nouvel appareil</b></em> , saisissez les informations suivantes à la création de votre nouveau compte :</p>
+<ul>
+<li>Pour une configuration en <span class="caps">IMAP</span><span class="widont"> </span>(recommandée)</li>
+</ul>
+<p>&nbsp;</p>
+<table>
+<thead>
+<tr>
+<th>Type du serveur</th>
+<th>Nom du serveur</th>
+<th>Port (avec SSL)</th>
+<th>Port (sans SSL)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Entrant</td>
+<td>SSL0.OVH.NET</td>
+<td>993</td>
+<td>143</td>
+</tr>
+<tr>
+<td>Sortant</td>
+<td>SSL0.OVH.NET</td>
+<td>465</td>
+<td>587</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<ul>
+<li>Pour une configuration en<span class="widont"> </span><span class="caps">POP</span></li>
+</ul>
+<p>&nbsp;</p>
+<table>
+<thead>
+<tr>
+<th>Type du serveur</th>
+<th>Nom du serveur</th>
+<th>Port (avec SSL)</th>
+<th>Port (sans SSL)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Entrant</td>
+<td>SSL0.OVH.NET</td>
+<td>995</td>
+<td>110</td>
+</tr>
+<tr>
+<td>Sortant</td>
+<td>SSL0.OVH.NET</td>
+<td>465</td>
+<td>587</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Parfois cela ne fonctionne pas du premier coup&#8230; n&#8217;hésitez pas à renouveler l&#8217;opération si besoin</p>
+
+
+Titre: Utiliser Google Analytics
+Contenu: <p>Après avoir reçu votre invitation Google Analytics, se connecter à <a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener noreferrer">GOOGLE ANALYTICS ici</a></p>
+<p>De manière générale les informations se trouvent dans l&#8217;onglet &#8220;Audiences&#8221;</p>
+<p>Sélectionner la plage (Semaine dernière, Mois dernier etc..)</p>
+<p><img decoding="async" class="alignnone size-full wp-image-1184" src="https://admin.tswd.fr/wp-content/uploads/2020/02/analytics.jpg" alt="" width="1024" height="688" srcset="https://admin.tswd.fr/wp-content/uploads/2020/02/analytics.jpg 1024w, https://admin.tswd.fr/wp-content/uploads/2020/02/analytics-980x658.jpg 980w, https://admin.tswd.fr/wp-content/uploads/2020/02/analytics-480x323.jpg 480w" sizes="(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) and (max-width: 980px) 980px, (min-width: 981px) 1024px, 100vw" /></p>
+
+
+Titre: Products dropdown from same category SHORTCODE
+Contenu: <p><code><br />
+//-----------------------------<br />
+//Products dropdown from same category SHORTCODE</p>
+<p>add_shortcode( 'products_dropdown', 'wc_products_from_cat_dropdown' );<br />
+function wc_products_from_cat_dropdown() {<br />
+    if( ! is_product() ) return;</p>
+<p>    ob_start();</p>
+<p>    $query = new WP_Query( array(<br />
+        'post_type'      =&gt; 'product',<br />
+        'post_status'    =&gt; 'publish',<br />
+        'posts_per_page' =&gt; '-1',<br />
+        'post__not_in'     =&gt; array( get_the_id() ),<br />
+        'tax_query' =&gt; array( array(<br />
+                'taxonomy' =&gt; 'product_cat',<br />
+                'field'    =&gt; 'ids',<br />
+                'terms'    =&gt; wp_get_post_terms( get_the_id(), 'product_cat', array( 'fields' =&gt; 'ids' ) ) ,<br />
+        ) ),<br />
+    ) );</p>
+<p>    if ( $query-&gt;have_posts() ) :</p>
+<p>    echo '&lt;div class=&quot;products-dropdown&quot;&gt;&lt;select name=&quot;products-select&quot; id=&quot;products-select&quot;&gt;<br />
+    &lt;option value=&quot;&quot;&gt;'.__('Choisir un autre mill&eacute;sime').'&lt;/option&gt;';</p>
+<p>    while ( $query-&gt;have_posts() ) : $query-&gt;the_post();</p>
+<p>    echo '&lt;option value=&quot;'.get_permalink().'&quot;&gt;'.get_the_title().'&lt;/option&gt;';</p>
+<p>    endwhile;</p>
+<p>    echo '&lt;/select&gt; &lt;button type=&quot;button&quot; style=&quot;padding:2px 10px; margin-left:10px;&quot;&gt;'._(&quot;Voir&quot;).'&lt;/button&gt;&lt;/div&gt;';</p>
+<p>    wp_reset_postdata();</p>
+<p>    endif;</p>
+<p>    ?&gt;<br />
+    &lt;script type='text/javascript'&gt;<br />
+        jQuery(function($){<br />
+            var a = '.products-dropdown', b = a+' button', c = a+' select', s = '';<br />
+            $(c).change(function(){<br />
+                s = $(this).val();<br />
+                console.log(s); // just for testing (to be removed)<br />
+            });<br />
+             $(b).click(function(){<br />
+                if( s != '' ) location.href = s;<br />
+            });</p>
+<p>        });<br />
+    &lt;/script&gt;<br />
+    &lt;?php</p>
+<p>    return ob_get_clean();<br />
+}</p>
+<p>// [products_dropdown]<br />
+</code></p>
+
+
+Titre: Remove Divi sidebar from all WooCommerce Product pages (as well as Shop and Category pages)
+Contenu: <p><code><br />
+/**<br />
+ * Remove Divi sidebar from all WooCommerce Product pages (as well as Shop and Category pages)<br />
+ */<br />
+function mytheme_divi_output_content_wrapper_end() {<br />
+	echo '<br />
+					&lt;/div&gt; &lt;!-- #left-area --&gt;<br />
+				&lt;/div&gt; &lt;!-- #content-area --&gt;<br />
+			&lt;/div&gt; &lt;!-- .container --&gt;<br />
+		&lt;/div&gt; &lt;!-- #main-content --&gt;';<br />
+}<br />
+function mytheme_remove_divi_sidebar() {<br />
+	remove_action( 'woocommerce_after_main_content', 'et_divi_output_content_wrapper_end', 10 );<br />
+	add_action( 'woocommerce_after_main_content', 'mytheme_divi_output_content_wrapper_end', 10 );<br />
+}<br />
+add_action( 'init', 'mytheme_remove_divi_sidebar', 10 );</p>
+<p>/**<br />
+ * Adjust the WooCommerce body classes for all WooCommerce Product pages (as well as Shop and Category pages)<br />
+ */<br />
+function mytheme_body_classes( $classes ) {<br />
+	if ( function_exists( 'is_woocommerce' ) &amp;&amp; is_woocommerce() ) {<br />
+		$remove_classes = array('et_right_sidebar', 'et_left_sidebar', 'et_includes_sidebar');<br />
+		foreach( $classes as $key =&gt; $value ) {<br />
+		      if ( in_array( $value, $remove_classes ) ) unset( $classes[$key] );<br />
+		}<br />
+		$classes[] = 'et_full_width_page';<br />
+	}<br />
+	return $classes;<br />
+}<br />
+add_filter('body_class', 'mytheme_body_classes', 20);<br />
+</code></p>
+
+
+Titre: Woo Add to cart button
+Contenu: <p><code><br />
+// Add "Add to Cart" buttons in Divi shop pages<br />
+add_action( 'woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 20 );<br />
+</code></p>
+
+
+Titre: Woo add description on product listing
+Contenu: <p><code><br />
+// Add descriptif<br />
+function show_product_description_et_shop() {<br />
+if(class_exists('WooCommerce')) {<br />
+$output = get_the_excerpt();<br />
+echo '<br />
+&lt;div class=&quot;your-class&quot;&gt;'.$output.'&lt;/div&gt;<br />
+';<br />
+}<br />
+}</p>
+<p>function load_function_after_wc(){</p>
+<p>add_action( 'woocommerce_after_shop_loop_item_title', 'show_product_description_et_shop', 100 );<br />
+}</p>
+<p>add_action('wp_loaded', 'load_function_after_wc');</p>
+<p></code></p>
+
+
+Titre: Woo traduct / change sentence
+Contenu: <p><code><br />
+/**<br />
+ * @snippet       Translate a String in WooCommerce<br />
+ * @how-to        Get CustomizeWoo.com FREE<br />
+ * @author        Rodolfo Melogli<br />
+ * @compatible    WooCommerce 3.7<br />
+ * @donate $9     https://businessbloomer.com/bloomer-armada/<br />
+ */</p>
+<p>add_filter( 'gettext', 'bbloomer_translate_woocommerce_strings', 999, 3 );</p>
+<p>function bbloomer_translate_woocommerce_strings( $translated, $untranslated, $domain ) {</p>
+<p>   if ( ! is_admin() && 'woocommerce' === $domain ) {</p>
+<p>      switch ( $translated) {</p>
+<p>         case 'Sale!' :</p>
+<p>            $translated = 'On Offer';<br />
+            break;</p>
+<p>         case 'Ajouter au panier' :</p>
+<p>            $translated = 'Choisir';<br />
+            break;</p>
+<p>         // ETC</p>
+<p>      }</p>
+<p>   }   </p>
+<p>   return $translated;</p>
+<p>}<br />
+</code></p>
+
+
+Titre: Browser detection
+Contenu: <p><code></p>
+<p>	var sBrowser, sUsrAg = navigator.userAgent;</p>
+<p>// The order matters here, and this may report false positives for unlisted browsers.</p>
+<p>if (sUsrAg.indexOf("Firefox") > -1) {<br />
+  sBrowser = "Mozilla Firefox";<br />
+  // "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"<br />
+} else if (sUsrAg.indexOf("SamsungBrowser") > -1) {<br />
+  sBrowser = "Samsung Internet";<br />
+  // "Mozilla/5.0 (Linux; Android 9; SAMSUNG SM-G955F Build/PPR1.180610.011) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/9.4 Chrome/67.0.3396.87 Mobile Safari/537.36<br />
+} else if (sUsrAg.indexOf("Opera") > -1 || sUsrAg.indexOf("OPR") > -1) {<br />
+  sBrowser = "Opera";<br />
+  // "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 OPR/57.0.3098.106"<br />
+} else if (sUsrAg.indexOf("Trident") > -1) {<br />
+  sBrowser = "Microsoft Internet Explorer";<br />
+  // "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; Zoom 3.6.0; wbx 1.0.0; rv:11.0) like Gecko"<br />
+} else if (sUsrAg.indexOf("Edge") > -1) {<br />
+  sBrowser = "Microsoft Edge";<br />
+  // "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299"<br />
+} else if (sUsrAg.indexOf("Chrome") > -1) {<br />
+  sBrowser = "Google Chrome or Chromium";<br />
+  // "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/66.0.3359.181 Chrome/66.0.3359.181 Safari/537.36"<br />
+} else if (sUsrAg.indexOf("Safari") > -1) {<br />
+  sBrowser = "Apple Safari";<br />
+  // "Mozilla/5.0 (iPhone; CPU iPhone OS 11_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1 980x1306"<br />
+} else {<br />
+  sBrowser = "unknown";<br />
+}</p>
+<p>alert("You are using: " + sBrowser);<br />
+</code></p>
+
+
+Titre: Woo . Repeat password
+Contenu: <p><code><br />
+//------------------------CONFIRM PASSWORD--------------------------</p>
+<p>// Add a second password field to the checkout page in WC 3.x.<br />
+add_filter( 'woocommerce_checkout_fields', 'wc_add_confirm_password_checkout', 10, 1 );<br />
+function wc_add_confirm_password_checkout( $checkout_fields ) {<br />
+    if ( get_option( 'woocommerce_registration_generate_password' ) == 'no' ) {<br />
+        $checkout_fields['account']['account_password2'] = array(<br />
+                'type'              =&gt; 'password',<br />
+                'label'             =&gt; __( 'Confirm password', 'woocommerce' ),<br />
+                'required'          =&gt; true,<br />
+                'placeholder'       =&gt; _x( 'Confirm Password', 'placeholder', 'woocommerce' )<br />
+        );<br />
+    }</p>
+<p>    return $checkout_fields;<br />
+}</p>
+<p>// Check the password and confirm password fields match before allow checkout to proceed.<br />
+add_action( 'woocommerce_after_checkout_validation', 'wc_check_confirm_password_matches_checkout', 10, 2 );<br />
+function wc_check_confirm_password_matches_checkout( $posted ) {<br />
+    $checkout = WC()-&gt;checkout;<br />
+    if ( ! is_user_logged_in() &amp;&amp; ( $checkout-&gt;must_create_account || ! empty( $posted['createaccount'] ) ) ) {<br />
+        if ( strcmp( $posted['account_password'], $posted['account_password2'] ) !== 0 ) {<br />
+            wc_add_notice( __( 'Passwords do not match.', 'woocommerce' ), 'error' );<br />
+        }<br />
+    }<br />
+}</p>
+<p>//------------------------CONFIRM PASSWORD--------------------------</p>
+<p></code></p>
+
+
+Titre: Center an item with position: relative
+Contenu: <p><code></p>
+<p>position: relative;<br />
+left: 50%;<br />
+transform: translateX(-50%);</p>
+<p></code></p>
+
+
+Titre: Désactiver certaines options de tri Woocommerce
+Contenu: <p><code><br />
+//--------------------- Désactiver certaines options de tri Woocommerce ------------------</p>
+<p>add_filter("woocommerce_catalog_orderby", function ($tab) {</p>
+<p>	unset($tab["popularity"]);<br />
+	unset($tab["rating"]);<br />
+	unset($tab["date"]);</p>
+<p>	return $tab;</p>
+<p>});</p>
+<p></code></p>
+
+
+Titre: Detect Mobile
+Contenu: <p><code><br />
+	if( navigator.userAgent.match(/Android/i)<br />
+ || navigator.userAgent.match(/webOS/i)<br />
+ || navigator.userAgent.match(/iPhone/i)<br />
+ || navigator.userAgent.match(/iPad/i)<br />
+ || navigator.userAgent.match(/iPod/i)<br />
+ || navigator.userAgent.match(/BlackBerry/i)<br />
+ || navigator.userAgent.match(/Windows Phone/i)){<br />
+	  // alert('YOURE USING MOBILE BRO');<br />
+	   }<br />
+</code></p>
+
+
+Titre: Rename DIVI Projects
+Contenu: <p><code><br />
+function DC_renommer_projets_divi() {</p>
+<p>/* Renommer le custom post type */<br />
+register_post_type( 'project',<br />
+array(<br />
+'labels' =&gt; array(<br />
+'name' =&gt; __( 'Véhicules', 'divi' ),<br />
+'singular_name' =&gt; __( 'Véhicule', 'divi' ),</p>
+<p>),<br />
+'has_archive' =&gt; true,<br />
+'hierarchical' =&gt; true,<br />
+'public' =&gt; true,<br />
+'rewrite' =&gt; array( 'slug' =&gt; 'vehicule', 'with_front' =&gt; false ),<br />
+'supports' =&gt; array(),<br />
+'menu_icon' =&gt; 'dashicons-marker',<br />
+));</p>
+<p>/* Renommer la catégorie */<br />
+register_taxonomy( 'project_category', array( 'project' ),<br />
+array(<br />
+'labels' =&gt; array(<br />
+'name' =&gt; _x( 'Catégories de véhicules', 'Catégories de véhicules', 'Divi' ),<br />
+),<br />
+'hierarchical' =&gt; true,<br />
+'show_ui' =&gt; true,<br />
+'show_admin_column' =&gt; true,<br />
+'query_var' =&gt; true,<br />
+'rewrite' =&gt; array( 'slug' =&gt; 'vehicule_category'),<br />
+) );</p>
+<p>/* Renommer les étiquettes */<br />
+register_taxonomy( 'project_tag', array( 'project' ),<br />
+array(<br />
+'labels' =&gt; array(<br />
+'name' =&gt; _x( 'Étiquettes des véhicules', 'Étiquettes des véhicules', 'Divi' ),<br />
+),<br />
+'hierarchical' =&gt; true,<br />
+'show_ui' =&gt; true,<br />
+'show_admin_column' =&gt; true,<br />
+'query_var' =&gt; true,<br />
+'rewrite' =&gt; array( 'slug' =&gt; 'vehicule_tag'),<br />
+) );</p>
+<p>}<br />
+add_action( 'init', 'DC_renommer_projets_divi' );</p>
+<p></code></p>
+<p>REFRESH PERMALINKS !</p>
+
+
+Titre: Repeat order
+Contenu: <p><code><br />
+/----------- ORDER AGAIN --------------</p>
+<p>add_filter( 'woocommerce_my_account_my_orders_actions', 'wrob_add_order_again_aciton', 10, 2 );<br />
+function wrob_add_order_again_aciton( $actions, $order ) {</p>
+<p>  if ( ! $order || ! $order->has_status( apply_filters( 'woocommerce_valid_order_statuses_for_order_again', array( 'completed' ) ) ) || ! is_user_logged_in() ) {<br />
+    return $actions;<br />
+  }</p>
+<p>  $actions['order-again'] = array(<br />
+    'url'  => wp_nonce_url( add_query_arg( 'order_again', $order->get_id() ) , 'woocommerce-order_again' ),<br />
+    'name' => __( 'Order Again', 'woocommerce' )<br />
+  );</p>
+<p>  return $actions;</p>
+<p>}<br />
+</code></p>
+
+
+Titre: :root &#8211; Variable CSS
+Contenu: <p><code><br />
+/* CREATE */<br />
+:root {<br />
+  --main-bg-color: brown;<br />
+}</p>
+<p>/* USE */<br />
+div {<br />
+  background-color: var(--main-bg-color);<br />
+}</p>
+<p></code></p>
+
+
+Titre: Child THEME
+Contenu: <p>Fichier functions.php<br />
+Lien fichier myJs.js (à créer)</p>
+<p><code><br />
+&lt;?php<br />
+function my_theme_enqueue_styles() {<br />
+wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );<br />
+}<br />
+add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );<br />
+// enqueue Javascript----------------------------<br />
+function theme_js(){<br />
+wp_enqueue_script( 'myJs',<br />
+get_stylesheet_directory_uri() . '/myJs.js',<br />
+array() );<br />
+}<br />
+add_action( 'wp_footer', 'theme_js' );<br />
+</code></p>
+<p>Fichier style.css<br />
+<code><br />
+/*<br />
+Theme Name: Divi Tswd<br />
+Theme URI: https://www.elegantthemes.com/gallery/divi/<br />
+Description: Theme enfant du theme Divi. Vous pouvez desormais le personnaliser sans risquer de perdre vos modifications<br />
+Author: TSWD<br />
+Author URI: https://tswd.fr<br />
+Template: DIVI<br />
+Version: 1.0<br />
+*/<br />
+</code></p>
+<p><strong>Screenshot.png</strong></p>
+<p><img decoding="async" class="alignnone size-full wp-image-913" src="https://admin.tswd.fr/wp-content/uploads/2019/12/screenshot.png" alt="" width="451" height="333" srcset="https://admin.tswd.fr/wp-content/uploads/2019/12/screenshot.png 451w, https://admin.tswd.fr/wp-content/uploads/2019/12/screenshot-300x222.png 300w" sizes="(max-width: 451px) 100vw, 451px" /></p>
+
+
+Titre: Remplacer texte qui contient
+Contenu: <p><code><br />
+$("button:contains('Cancel')").text("Annuler");<br />
+</code></p>
+
+
+Titre: jquery file input image preview before it is uploaded
+Contenu: <p>HTML<br />
+<code><br />
+&lt;form id=&quot;form1&quot; runat=&quot;server&quot;&gt;<br />
+    &lt;input type='file' id=&quot;inputFile&quot; /&gt;<br />
+    &lt;img id=&quot;image_upload_preview&quot; src=&quot;https://placehold.it/100x100&quot; alt=&quot;your image&quot; /&gt;<br />
+&lt;/form&gt;<br />
+</code></p>
+<p>JQUERY 1.8.1<br />
+<code><br />
+    function readURL(input) {<br />
+        if (input.files && input.files[0]) {<br />
+            var reader = new FileReader();</p>
+<p>            reader.onload = function (e) {<br />
+                $('#image_upload_preview').attr('src', e.target.result);<br />
+            }</p>
+<p>            reader.readAsDataURL(input.files[0]);<br />
+        }<br />
+    }</p>
+<p>    $("#inputFile").change(function () {<br />
+        readURL(this);<br />
+    });<br />
+</code></p>
+
+
+Titre: Article image background
+Contenu: <p>JUST REPLACE BLURRY IMAGE<br />
+<code><br />
+	if ($('.et_pb_blog_grid').length) {<br />
+		$('.et_pb_blog_grid article').each(function() {<br />
+			$('.et_pb_image_container', this).append($('.entry-title', this))<br />
+			$('img', this).attr('src', $('img', this).attr('src').replace('-400x250', '')).attr('srcset', '');<br />
+		})<br />
+		$(document).bind("ajaxComplete", function() {<br />
+			$('.et_pb_blog_grid article').each(function() {<br />
+				$('.et_pb_image_container', this).append($('.entry-title', this))<br />
+				$('img', this).attr('src', $('img', this).attr('src').replace('-400x250', '')).attr('srcset', '');<br />
+			})<br />
+		})<br />
+	}</p>
+<p></code></p>
+<p>JS<br />
+<code><br />
+/*------------------------------------------------*/<br />
+/*        BLOG GRID IMAGE BACKGROUND            --*/<br />
+/*------------------------------------------------*/<br />
+	function imagesArticleBg() {<br />
+		$('#ligne-blog article').each(function () {<br />
+			var imgUrl = $('img', this).attr("src");<br />
+			console.log(imgUrl);<br />
+			$(this).css("background", "linear-gradient( rgba(0, 0, 0, 0.15),  rgba(0, 0, 0, 0.15)), url(" + imgUrl + ")");<br />
+			$(this).hover(function () {<br />
+				$(this).css("background", "linear-gradient( rgba(0, 0, 0, 0.55),  rgba(0, 0, 0, 0.55)), url(" + imgUrl + ")");<br />
+			})<br />
+			$(this).mouseleave(function () {<br />
+				$(this).css("background", "linear-gradient( rgba(0, 0, 0, 0.15),  rgba(0, 0, 0, 0.15)), url(" + imgUrl + ")");<br />
+			})<br />
+		});<br />
+	}<br />
+	imagesArticleBg(); //initialisation<br />
+	/* J'active aussi ma function apres le changement de page AJAX*/<br />
+	$('#ligne-blog').bind("ajaxSend", function () {<br />
+		console.log('loadibn')<br />
+	}).bind("ajaxComplete", function () {<br />
+		imagesArticleBg();<br />
+		console.log('loaded')<br />
+	});<br />
+</code></p>
+<p>CSS</p>
+<p><code><br />
+#ligne-blog .et_pb_column {<br />
+	display:flex;<br />
+	justify-content:center;<br />
+}<br />
+#ligne-blog article img {<br />
+  display: none;<br />
+}<br />
+#ligne-blog article {<br />
+  background-size: cover !important;<br />
+  background-position: center !important;<br />
+  color: white !important;<br />
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);<br />
+  border: none !important;<br />
+  text-align: left;<br />
+	padding-top: 15% !important;<br />
+    padding-bottom: 15% !important;<br />
+}<br />
+</code></p>
+
+
+Titre: if div has class
+Contenu: <p><code><br />
+if ($('body.page-id-62').length) { </p>
+<p>}</p>
+<p></code></p>
+<p>IF NOT</p>
+<p><code><br />
+if ($('body.page-id-62').length === 0 ) { </p>
+<p>}</p>
+<p></code></p>
+<p>better than if ( !$(</p>
+
+
+Titre: if visible (top and bottom)
+Contenu: <p><code><br />
+$('#main-header').addClass('unfixed-header');</p>
+<p>	$(window).scroll(function() {<br />
+    var top_of_element = $("#-------").offset().top;<br />
+    var bottom_of_element = $("#-----").offset().top + $("#-------").outerHeight();<br />
+    var bottom_of_screen = $(window).scrollTop() + $(window).innerHeight();<br />
+    var top_of_screen = $(window).scrollTop();</p>
+<p>    if ((bottom_of_screen > top_of_element) && (top_of_screen < bottom_of_element)){
+        // the element is visible, do something
+	$('#main-header').addClass('unfixed-header');
+    } else {
+        // the element is not visible, do something else
+	$('#main-header').removeClass('unfixed-header');
+
+    }
+});
+</code></p>
+
+
+Titre: CONCEPTION TRAVAUX
+Contenu: <h2>BENCHMARK</h2>
+<p>&nbsp;</p>
+<h3>Simplicité éfficacité</h3>
+<p><a href="https://www.ehf-groupe.fr/" rel="nofollow">https://www.ehf-groupe.fr/</a></p>
+<p>&nbsp;</p>
+<h3>Site complet et pas mal</h3>
+<p><a href="https://bci-isolation.com/isolation-a-un-euro-vaucluse/" rel="nofollow">https://bci-isolation.com/isolation-a-un-euro-vaucluse/</a></p>
+<p>&nbsp;</p>
+<h3>EXEMPLES Site (construction)</h3>
+<p><a href="https://www.gmc-construction.fr/" rel="nofollow">https://www.gmc-construction.fr/</a></p>
+<p>&nbsp;</p>
+<h3>EXEMPLES Possibilité &#8211; DESIGN</h3>
+<p><a href="https://www.elegantthemes.com/layouts/business/venture-capital-firm-home-page/live-demo" rel="nofollow">https://www.elegantthemes.com/layouts/business/venture-capital-firm-home-page/live-demo</a></p>
+<h3></h3>
+<h3>FONCTIONNALITÉS</h3>
+<ul>
+<li>Formulaire de contact</li>
+<li>Rappel rapide (lien vers téléphone)</li>
+<li>Page actualité (?) + lien vers FB ?</li>
+</ul>
+<p>&nbsp;</p>
+<h3>IDÉES</h3>
+<ul>
+<li>Devis sur mesure</li>
+<li>Page recrutement (formulaire avec envoi CV)</li>
+</ul>
+<p>&nbsp;</p>
+<h3>QUESTIONS</h3>
+<ul>
+<li>Quels sont vos métiers / domaines ?</li>
+<li>Quels sont tes sites exemples ?</li>
+</ul>
+<p>&nbsp;</p>
+<h3>CONTENUS</h3>
+<h6><strong>Qui finance votre isolation ?</strong></h6>
+<p>L’état, à travers la loi POPE n°2005-781, a fixé une politique énergétique résolument axée sur les économies d’énergie. Ainsi, les fournisseurs d’énergie tels que définis par les articles R. 221-1 à R. 221-13 du code de l&#8217;énergie, c’est à dire les distributeurs de carburant, d’électricité, de fioul&#8230;sont dans l&#8217;obligation de financer des travaux d’isolation garantissant une économie d’énergie à leurs clients. La finalité annoncée est une contribution significative à l&#8217;objectif de réaliser chaque année jusqu&#8217;en 2020, des économies d&#8217;énergie correspondant à 1.5% des volumes d&#8217;énergie vendus sur la période 2010-2012 (source : Ministère de l&#8217;Environnement, de l&#8217;Énergie et de la Mer).</p>
+<h6><strong>Qui peut bénéficier de cette aide de l&#8217;état?</strong></h6>
+<p>Tous les foyers visés par le dispositif des certificats d&#8217;économies d&#8217;énergie (CEE), créé par les articles 14 à 17 de la loi n° 2005-781 du 13 juillet 2005 de programme fixant les orientations de la politique énergétique (loi POPE). Au dispositif global, la loi relative à la transition énergétique pour la croissance verte (LTECV) a rajouté une nouvelle obligation d&#8217;économies d&#8217;énergie (article L. 211-1-1) au profit des foyers en situation de précarité énergétique. Concrètement, l’état a défini des critères d’éligibilité précis pour l&#8217;isolation à 1 € afin de favoriser l’accès aux économies d’énergie des foyers modestes.</p>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p><img decoding="async" class="alignnone wp-image-752" src="https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2.jpg" alt="" width="225" height="137" srcset="https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2.jpg 1920w, https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2-300x182.jpg 300w, https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2-1024x622.jpg 1024w, https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2-768x467.jpg 768w, https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2-1536x933.jpg 1536w, https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2-1080x656.jpg 1080w, https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2-1320x802.jpg 1320w, https://admin.tswd.fr/wp-content/uploads/2019/11/5957916611-2-600x365.jpg 600w" sizes="(max-width: 225px) 100vw, 225px" /></p>
+<p>0643561130</p>
+
+
+Titre: Taille image
+Contenu: <p><code><br />
+function wpm_new_image(){</p>
+<p>// L'image sera tronquée exactement à la dimension indiquée<br />
+add_image_size( 'wpm_taille_1', 200, 200, true ); </p>
+<p>// L'image sera redimensionnée de manière proportionnelle à la largeur indiquée (ici 600px)<br />
+// La hauteur peut-etre différente d'une image à l'autre pour garder la proportion originale<br />
+add_image_size( 'wpm_taille_2', 600, 300 ); </p>
+<p>// Utile si vous publiez de très grande image type infographie.<br />
+add_image_size( 'wpm_taille_3', 590, 9999 );</p>
+<p>}<br />
+add_action( 'after_setup_theme', 'wpm_new_image' );<br />
+</code></p>
+<p>>>> REGENERATE THUMBNAILS</p>
+
+
+Titre: User name &#8211; Shortcode
+Contenu: <p><code><br />
+// A shortcode to get the current username---------<br />
+// [---wp_get_current_user] </p>
+<p>add_shortcode( 'wp_get_current_user' , 'wp_get_current_user_func' );<br />
+function wp_get_current_user_func( $atts ) {<br />
+    $current_user = wp_get_current_user();</p>
+<p>    return $current_user->user_login;<br />
+}</p>
+<p></code></p>
+
+
+Titre: If USER is &#8211; Shortcode
+Contenu: <p><code></p>
+<p>// ------------------ If user is shortcode------------------------<br />
+/* print content of enclosing shortcode if user is of role attribute */<br />
+function check_user_role( $atts, $content = null ) {<br />
+        extract( shortcode_atts( array(<br />
+                'role' => 'role' ), $atts ) );</p>
+<p>        if( current_user_can( $role ) ) {<br />
+                return $content;<br />
+        }<br />
+}</p>
+<p>/*<br />
+[---user_role role="administrator"]<br />
+You can see this text if you are an administrator.<br />
+[---/user_role]<br />
+[---user_role role="subscriber"]<br />
+You can read this if you are a common subscriber.<br />
+[---/user_role]<br />
+Anyone can read this text.*/<br />
+add_shortcode( 'user_role', 'check_user_role' );</p>
+<p></code></p>
+
+
+Titre: ESCAPE GAME
+Contenu: <h2>CONCLUSION</h2>
+<p><img decoding="async" class="alignnone  wp-image-818" src="https://admin.tswd.fr/wp-content/uploads/2019/11/Capture-d’écran-2019-11-25-à-13.45.06.png" alt="" width="368" height="980" srcset="https://admin.tswd.fr/wp-content/uploads/2019/11/Capture-d’écran-2019-11-25-à-13.45.06.png 914w, https://admin.tswd.fr/wp-content/uploads/2019/11/Capture-d’écran-2019-11-25-à-13.45.06-113x300.png 113w, https://admin.tswd.fr/wp-content/uploads/2019/11/Capture-d’écran-2019-11-25-à-13.45.06-384x1024.png 384w, https://admin.tswd.fr/wp-content/uploads/2019/11/Capture-d’écran-2019-11-25-à-13.45.06-768x2048.png 768w, https://admin.tswd.fr/wp-content/uploads/2019/11/Capture-d’écran-2019-11-25-à-13.45.06-576x1536.png 576w, https://admin.tswd.fr/wp-content/uploads/2019/11/Capture-d’écran-2019-11-25-à-13.45.06-600x1599.png 600w" sizes="(max-width: 368px) 100vw, 368px" /></p>
+<h2></h2>
+<h2>BENCHMARK ANALYSE</h2>
+<p><strong><a href="https://www.missionevasion.fr/" rel="nofollow">https://www.missionevasion.fr/</a></strong></p>
+<p><strong>WOOCOMMERCE</strong></p>
+<p>Thème premium Ronneby (50)</p>
+<p>WooCommerce Bookings (249)</p>
+<ul>
+<li>Réservations</li>
+<li>Cartes cadeaux</li>
+<li>MAP</li>
+<li>Formulaire contact (particulier / entreprise)</li>
+<li>Compteurs / Animations sur arrivée</li>
+</ul>
+<p>Tonalité rouge / Dark</p>
+<p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</p>
+<p><strong><a href="https://lyon.escapegameover.fr/" rel="nofollow">https://lyon.escapegameover.fr/</a></strong></p>
+<p>Système de réservation + carte cadeau EXTERNE</p>
+<p>&nbsp;</p>
+
+
+Titre: Set a Cookie
+Contenu: <p><code><br />
+	$('button').click(function() {</p>
+<p>		var tomorrow = new Date();<br />
+tomorrow.setDate(tomorrow.getDate() + 1);//2 jours</p>
+<p>		document.cookie = 'professionnel = professionnel; expires=' + tomorrow.toUTCString() + '; path=/';<br />
+		var ccheckCookies = document.cookie;<br />
+		console.log(tomorrow);<br />
+	});</p>
+<p>	function getCookiePro() {<br />
+		var name = "professionnel";<br />
+		var decodedCookie = decodeURIComponent(document.cookie);<br />
+		var ca = decodedCookie.split(';');<br />
+		for (var i = 0; i < ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	}
+
+	//-----------
+
+	if (getCookiePro() == "=professionnel") {
+		console.log('je suis un professionnel (cookie)');
+
+	}</code></p>
+
+
+Titre: If visited page | SESSION
+Contenu: <p><code><br />
+var ls = localStorage.getItem('namespace.visited');<br />
+if (ls == null) {<br />
+    console.log("Your first visit");<br />
+    localStorage.setItem('namespace.visited', 1);<br />
+		//<br />
+} else{<br />
+    console.log("NOT Your first visit");<br />
+}<br />
+</code></p>
+
+
+Titre: Detect scrolling direction (top / Bottom)
+Contenu: <p><code><br />
+var position = $(window).scrollTop(); </p>
+<p>// should start at 0</p>
+<p>$(window).scroll(function() {<br />
+    var scroll = $(window).scrollTop();<br />
+    if(scroll > position) {<br />
+        console.log('scrollDown');<br />
+        $('div').text('Scrolling Down Scripts');<br />
+    } else {<br />
+         console.log('scrollUp');<br />
+         $('div').text('Scrolling Up Scripts');<br />
+    }<br />
+    position = scroll;<br />
+});<br />
+</code></p>
+
+
+Titre: Popup load
+Contenu: <p><code><br />
+$('#ligne-blog article a').click(function(e) { //Sauf sur mesure<br />
+	//--------<br />
+	e.preventDefault();<br />
+	var ptfUrl = $(this).attr("href");<br />
+	var ptfUrlContent = ptfUrl + " article";<br />
+	console.log(ptfUrl);<br />
+	$('.popup-ptf').remove();<br />
+	$('#main-content').append('</p>
+<div class="popup-ptf">
+<div style="position:relative">
+<div style="position:relative"></div>
+</div>
+</div>
+<p>')<br />
+	$('.popup-ptf > div > div').load(ptfUrlContent);<br />
+	console.log(ptfUrlContent);<br />
+	setTimeout(function() {<br />
+		$('.popup-ptf > div').append('</p>
+<div class="popup-ptf-close"><img decoding="async" src="https://b4k.ealbmaquette.com/wp-content/uploads/2019/06/cross-sm.png"></div>
+<p>');<br />
+		$('.popup-ptf-close').click(function() {<br />
+			$('.popup-ptf').remove();<br />
+		});<br />
+	}, 500);<br />
+	//--------<br />
+});<br />
+</code></p>
+<p>CSS</p>
+<p><code><br />
+/*----popup portfolio----*/<br />
+.popup-ptf {<br />
+  position: fixed;<br />
+  top: 0;<br />
+  left: 0%;<br />
+  height: 100%;<br />
+  width: 100%;<br />
+  color: graytext;<br />
+  z-index: 999;<br />
+  display: flex;<br />
+  justify-content: center;<br />
+  align-items: center;<br />
+}</p>
+<p>.popup-ptf strong {<br />
+  color: #2070ba;<br />
+  font-size: 18px;<br />
+  display: block;<br />
+  margin-bottom: 12px;<br />
+  margin-top: 22px;<br />
+}</p>
+<p>.popup-ptf .et_pb_text_inner {<br />
+  width: 80% !important;<br />
+	margin:auto;<br />
+}</p>
+<p>.popup-ptf .et_pb_section {<br />
+padding:0;}</p>
+<p>.popup-ptf > div {<br />
+  background: rgba(255,255,255,0.96);<br />
+  border-radius: 9px;<br />
+  width: 90vw;<br />
+  height: 90vh;<br />
+  max-width: 850px;<br />
+  max-height: 650px;<br />
+  overflow-y: scroll;<br />
+padding:50px 25px ;<br />
+	padding-bottom:50px !important;</p>
+<p>	box-shadow: 0 9px 30px rgba(0,0,0,0.4);<br />
+}</p>
+<p>.popup-ptf-close {<br />
+  position: absolute;<br />
+  top: 15px;<br />
+  right: 15px;<br />
+  cursor: pointer;<br />
+  opacity: 0.5;<br />
+  max-width: 20px;</p>
+<p></code></p>
+
+
+Titre: Shortcode Creation
+Contenu: <p><code><br />
+//Use just</p>
+<p>add_shortcode( ‘wp_nav_menu_additional-resources_items’, ‘wp_nav_menu_additional-resources_items’ );</p>
+<p>//And inside some text<br />
+[wp_nav_menu_additional-resources_items]<br />
+</code></p>
+
+
+Titre: Scroll Top on click
+Contenu: <p><code><br />
+$('.header-arrow-down').click(function(){<br />
+	var yopla = $(window).scrollTop();<br />
+	var middleScreen = $(window).height() / 1.1;	</p>
+<p> $('html, body').animate({ scrollTop: yopla + middleScreen  })<br />
+	})<br />
+</code></p>
+
+
+Titre: Scrollbar CSS
+Contenu: <p>NEW</p>
+<p><code><br />
+/*_,.-'~'-.,__,.-'~'-.,__,.-'- SCROLLBAR -.,__,.-'~'-.,__,.-'~'-.,_*/<br />
+ body::-webkit-scrollbar {<br />
+     width: 11px;<br />
+}<br />
+ body::-webkit-scrollbar-track {<br />
+     background: white;<br />
+}<br />
+ body::-webkit-scrollbar-thumb {<br />
+     background-color: black ;<br />
+     border-radius: 6px;<br />
+     border: 3px solid white;<br />
+}<br />
+/*MOZ*/<br />
+ html {<br />
+     scrollbar-width: thin ;<br />
+     scrollbar-color: black white ;<br />
+}</p>
+<p>html, body {<br />
+  -ms-overflow-style: -ms-autohiding-scrollbar;<br />
+}<br />
+/*_,.-'~'-.,__,.-'~'-.,__,.-'- SCROLLBAR END -.,__,.-'~'-.,__,.-'~'-.,_*/</p>
+<p></code></p>
+<p>OLD</p>
+<p><code><br />
+div::-moz-scrollbar {<br />
+  width: 6px;<br />
+  height: 6px;<br />
+}</p>
+<p>div::-webkit-scrollbar {<br />
+  width: 6px;<br />
+  height: 6px;<br />
+}</p>
+<p>div::-moz-scrollbar-button:start:decrement {<br />
+  height: 0px;<br />
+  display: block;<br />
+  background-color: white;<br />
+}</p>
+<p> div::-webkit-scrollbar-button:start:decrement,  div::-webkit-scrollbar-button:end:increment {<br />
+  height: 0px;<br />
+  display: block;<br />
+  background-color: white;<br />
+}</p>
+<p>div::-moz-scrollbar-track-piece {<br />
+  background-color: white;<br />
+    /*Global Track Peice(the slider noob.)*/<br />
+  -webkit-border-radius: 6px;<br />
+}</p>
+<p>div::-webkit-scrollbar-track-piece {<br />
+  background-color: white;<br />
+    /*Global Track Peice(the slider noob.)*/<br />
+  -webkit-border-radius: 6px;<br />
+}</p>
+<p>div::-moz-scrollbar-thumb:vertical {<br />
+  height: 50px;<br />
+  background-color: #d54e21;<br />
+    /* Up/Down slider background*/<br />
+  -webkit-border-radius: 6px;<br />
+}</p>
+<p>div::-webkit-scrollbar-thumb:vertical {<br />
+  height: 50px;<br />
+  background-color: #d54e21;<br />
+    /* Up/Down slider background*/<br />
+  -webkit-border-radius: 6px;<br />
+}<br />
+</code></p>
+
+
+Titre: Remplacer vignette par image pleine
+Contenu: <p><code><br />
+$("img[src*='-400x284']").each(function() {<br />
+    $(this).attr("src", $(this).attr("src").replace(/\-400x284/g, ""));<br />
+});<br />
+</code></p>
+<p>OU</p>
+<p><code>// Remplacer vignette par image quali<br />
+$('.woocommerce .product img').each(function() {<br />
+		var badUrl=$(this).attr('src');<br />
+		var newUrl=badUrl.replace("-300x300", "");<br />
+		console.log(badUrl);<br />
+		console.log(newUrl) $(this).attr('src', newUrl);<br />
+	})<br />
+</code></p>
+
+
+Titre: Ajouter excerpt dans listing produit
+Contenu: <p><code><br />
+//Ajouter excerpt dans listing produit</p>
+<p>add_action( 'woocommerce_shop_loop_item_title', 'wc_add_long_description' );</p>
+<p>function wc_add_long_description() {<br />
+	global $product;</p>
+<p>	?><br />
+        &lt;div itemprop="description"&gt;<br />
+            <?php echo substr( apply_filters( 'the_content', $product->post->post_content ), 0,200 );?><br />
+        &lt;/div&gt;<br />
+	<?php
+}
+</code></p>
+
+
+Titre: Redirect after add to cart
+Contenu: <p><code><br />
+function my_custom_add_to_cart_redirect( $url ) {<br />
+	$url = get_permalink(  wc_get_page_id( 'shop' ) ); // URL to redirect to (1 is the page ID here)<br />
+	return $url;<br />
+}<br />
+add_filter( 'woocommerce_add_to_cart_redirect', 'my_custom_add_to_cart_redirect' );<br />
+</code></p>
+
+
+Titre: Quantity field on shop page
+Contenu: <p><code></p>
+<p>function ace_shop_page_add_quantity_field() {<br />
+	/** @var WC_Product $product */<br />
+	$product = wc_get_product( get_the_ID() );<br />
+	if ( ! $product->is_sold_individually() && 'variable' != $product->get_type() && $product->is_purchasable() ) {<br />
+		woocommerce_quantity_input( array( 'min_value' => 1, 'max_value' => $product->backorders_allowed() ? '' : $product->get_stock_quantity() ) );<br />
+	}<br />
+}<br />
+add_action( 'woocommerce_after_shop_loop_item', 'ace_shop_page_add_quantity_field', 12 );<br />
+/**<br />
+ * Add required JavaScript.<br />
+ */<br />
+function ace_shop_page_quantity_add_to_cart_handler() {<br />
+	wc_enqueue_js( '<br />
+		$(".woocommerce .products").on("click", ".quantity input", function() {<br />
+			return false;<br />
+		});<br />
+		$(".woocommerce .products").on("change input", ".quantity .qty", function() {<br />
+			var add_to_cart_button = $(this).parents( ".product" ).find(".add_to_cart_button");<br />
+			add_to_cart_button.data("quantity", $(this).val());<br />
+			add_to_cart_button.attr("href", "?add-to-cart=" + add_to_cart_button.attr("data-product_id") + "&quantity=" + $(this).val());<br />
+		});<br />
+		$(".woocommerce .products").on("keypress", ".quantity .qty", function(e) {<br />
+			if ((e.which||e.keyCode) === 13) {<br />
+				$( this ).parents(".product").find(".add_to_cart_button").trigger("click");<br />
+			}<br />
+		});<br />
+	' );<br />
+}<br />
+add_action( 'init', 'ace_shop_page_quantity_add_to_cart_handler' );</p>
+<p></code></p>
+
+
+Titre: Visual HOOK &#8211; WOO
+Contenu: <p><img decoding="async" class="alignnone size-full wp-image-578" src="https://admin.tswd.fr/wp-content/uploads/2019/11/single-product-page-scaled.png" alt="" width="749" height="2560" srcset="https://admin.tswd.fr/wp-content/uploads/2019/11/single-product-page-scaled.png 562w, https://admin.tswd.fr/wp-content/uploads/2019/11/single-product-page-88x300.png 88w, https://admin.tswd.fr/wp-content/uploads/2019/11/single-product-page-300x1024.png 300w, https://admin.tswd.fr/wp-content/uploads/2019/11/single-product-page-768x2624.png 768w, https://admin.tswd.fr/wp-content/uploads/2019/11/single-product-page-599x2048.png 599w, https://admin.tswd.fr/wp-content/uploads/2019/11/single-product-page-1080x3690.png 1080w, https://admin.tswd.fr/wp-content/uploads/2019/11/single-product-page-600x2050.png 600w" sizes="(max-width: 749px) 100vw, 749px" /></p>
+<p><img decoding="async" class="alignnone size-full wp-image-580" src="https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page.png" alt="" width="1119" height="2126" srcset="https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page.png 1119w, https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page-158x300.png 158w, https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page-539x1024.png 539w, https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page-768x1459.png 768w, https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page-808x1536.png 808w, https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page-1078x2048.png 1078w, https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page-1080x2052.png 1080w, https://admin.tswd.fr/wp-content/uploads/2019/11/archive-page-600x1140.png 600w" sizes="(max-width: 1119px) 100vw, 1119px" /></p>
+<p><img decoding="async" class="alignnone size-full wp-image-581" src="https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-scaled.png" alt="" width="917" height="2560" srcset="https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-scaled.png 688w, https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-107x300.png 107w, https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-367x1024.png 367w, https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-768x2144.png 768w, https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-550x1536.png 550w, https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-734x2048.png 734w, https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-1080x3015.png 1080w, https://admin.tswd.fr/wp-content/uploads/2019/11/cart-page-600x1675.png 600w" sizes="(max-width: 917px) 100vw, 917px" /></p>
+<p><img decoding="async" class="alignnone size-full wp-image-582" src="https://admin.tswd.fr/wp-content/uploads/2019/11/check-out-page-scaled.png" alt="" width="597" height="2560" srcset="https://admin.tswd.fr/wp-content/uploads/2019/11/check-out-page-scaled.png 448w, https://admin.tswd.fr/wp-content/uploads/2019/11/check-out-page-70x300.png 70w, https://admin.tswd.fr/wp-content/uploads/2019/11/check-out-page-239x1024.png 239w, https://admin.tswd.fr/wp-content/uploads/2019/11/check-out-page-768x3292.png 768w, https://admin.tswd.fr/wp-content/uploads/2019/11/check-out-page-358x1536.png 358w, https://admin.tswd.fr/wp-content/uploads/2019/11/check-out-page-1080x4630.png 1080w, https://admin.tswd.fr/wp-content/uploads/2019/11/check-out-page-600x2572.png 600w" sizes="(max-width: 597px) 100vw, 597px" /></p>
+<p><img decoding="async" class="alignnone size-full wp-image-583" src="https://admin.tswd.fr/wp-content/uploads/2019/11/email-hooks-scaled.png" alt="" width="1024" height="2560" srcset="https://admin.tswd.fr/wp-content/uploads/2019/11/email-hooks-scaled.png 768w, https://admin.tswd.fr/wp-content/uploads/2019/11/email-hooks-120x300.png 120w, https://admin.tswd.fr/wp-content/uploads/2019/11/email-hooks-410x1024.png 410w, https://admin.tswd.fr/wp-content/uploads/2019/11/email-hooks-614x1536.png 614w, https://admin.tswd.fr/wp-content/uploads/2019/11/email-hooks-819x2048.png 819w, https://admin.tswd.fr/wp-content/uploads/2019/11/email-hooks-1080x2700.png 1080w, https://admin.tswd.fr/wp-content/uploads/2019/11/email-hooks-600x1500.png 600w" sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+<style>article img{filter:saturate(0)}</style>
+
+
+Titre: Case consentement commande
+Contenu: <p><code>// Add Checkbox<br />
+add_action('woocommerce_review_order_before_submit', 'my_required_checkout_field');<br />
+function my_required_checkout_field()<br />
+{<br />
+    woocommerce_form_field('age_confirm', array(<br />
+        'type' => 'checkbox',<br />
+        'class' => array('input-checkbox'),<br />
+        'label' => __('J\'ai l\'&acirc;ge légal'),<br />
+        'required' => true,<br />
+    ), WC()->checkout->get_value('age_confirm'));<br />
+}</p>
+<p>// Process the checkout<br />
+add_action('woocommerce_checkout_process', 'my_custom_checkout_field_process');<br />
+function my_custom_checkout_field_process()<br />
+{<br />
+    if (!$_POST['age_confirm']) {<br />
+        wc_add_notice(__('Confirmez votre majorité'), 'error');<br />
+    }<br />
+}</p>
+<p>//Update the order meta with field value<br />
+add_action('woocommerce_checkout_update_order_meta', 'my_custom_checkout_field_update_order_meta');<br />
+function my_custom_checkout_field_update_order_meta($order_id)<br />
+{<br />
+    if ($_POST['age_confirm']) {<br />
+        update_post_meta($order_id, 'Age Confirm', esc_attr($_POST['age_confirm']));<br />
+    }<br />
+}</p>
+<p></code></p>
+
+
+Titre: Percentage reduction
+Contenu: <p>/*<br />
+ *<br />
+ *<br />
+<code><br />
+ * @snippet       Display Discount Percentage @ Loop Pages - WooCommerce*/</p>
+<p>add_action( 'woocommerce_before_shop_loop_item', 'bbloomer_show_sale_percentage_loop', 25 );</p>
+<p>function bbloomer_show_sale_percentage_loop() {<br />
+   global $product;<br />
+   if ( ! $product->is_on_sale() ) return;<br />
+   if ( $product->is_type( 'simple' ) ) {<br />
+      $max_percentage = ( ( $product->get_regular_price() - $product->get_sale_price() ) / $product->get_regular_price() ) * 100;<br />
+   } elseif ( $product->is_type( 'variable' ) ) {<br />
+      $max_percentage = 0;<br />
+      foreach ( $product->get_children() as $child_id ) {<br />
+         $variation = wc_get_product( $child_id );<br />
+         $price = $variation->get_regular_price();<br />
+         $sale = $variation->get_sale_price();<br />
+         if ( $price != 0 && ! empty( $sale ) ) $percentage = ( $price - $sale ) / $price * 100;<br />
+         if ( $percentage > $max_percentage ) {<br />
+            $max_percentage = $percentage;<br />
+         }<br />
+      }<br />
+   }<br />
+   if ( $max_percentage > 0 ) echo "&lt;div class='sale-perc-tswd'&gt;&lt;p&gt;-" . round($max_percentage) . "%&lt;/p&gt;&lt;/div&gt;";<br />
+}<br />
+</code></p>
+
+
+Titre: Continue shopping on woo pages
+Contenu: <p>PANIER<br />
+<code><br />
+/*<br />
+* Add Continue Shopping Button on Cart Page<br />
+* Add to theme functions.php file or Code Snippets plugin<br />
+*/<br />
+add_action( 'woocommerce_before_cart_table', 'woo_add_continue_shopping_button_to_cart' );<br />
+function woo_add_continue_shopping_button_to_cart() {<br />
+$shop_page_url = get_permalink( woocommerce_get_page_id( 'shop' ) );<br />
+echo '&lt;div class="woocommerce-message woocommerce-message-tswd"&gt;';<br />
+echo ' &lt;a class="button" href="'.$shop_page_url.'"&gt;Retour à la boutique →&lt;/a&gt; Vous désirez continuer vos achats ?';<br />
+echo '&lt;/div&gt;';}</code></p>
+<p>LOGIN<br />
+<code><br />
+woocommerce_before_customer_login_form<br />
+</code></p>
+<p>ACCOUNT<br />
+<code><br />
+woocommerce_account_content<br />
+</code></p>
+
+
+Titre: Bas de page &#8211; Event
+Contenu: <p><code><br />
+// CACHER LE MENU EN ARRIVANT SUR LE FOOTER<br />
+$(window).scroll(function () {<br />
+	if ($(window).scrollTop() + $(window).height() == $(document).height()) {<br />
+		$('.sidebar').addClass('menu-hide');<br />
+	} else {<br />
+		$('.sidebar').removeClass('menu-hide');<br />
+	}<br />
+});<br />
+</code></p>
+
+
+Titre: Match media
+Contenu: <p><code><br />
+if (window.matchMedia("(max-width: 768px)").matches) {</p>
+<p>}<br />
+</code></p>
+
+
+Titre: If is on screen
+Contenu: <p>FUNCTION </p>
+<p><code><br />
+$.fn.isOnScreen = function() {<br />
+			var win = $(window);<br />
+			var viewport = {<br />
+				top: win.scrollTop(),<br />
+				left: win.scrollLeft()<br />
+			};<br />
+			viewport.right = viewport.left + win.width();<br />
+			viewport.bottom = viewport.top + win.height() ;<br />
+			var bounds = this.offset();<br />
+			bounds.right = bounds.left + this.outerWidth();<br />
+			bounds.bottom = bounds.top + this.outerHeight();<br />
+			return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));<br />
+		};<br />
+</code></p>
+<p>ACTION GLOBAL (each)<br />
+<code><br />
+if ($('.et_pb_section').length) {<br />
+	$(window).scroll(function() {<br />
+		$('.et_pb_section').each(function() {<br />
+			if ($(this).isOnScreen()) {<br />
+				$(this).addClass('inview')<br />
+			}<br />
+		})<br />
+	});<br />
+}</p>
+<p></code></p>
+<p>ACTION SPECIFIC<br />
+<code></p>
+<p>			$(window).scroll(function() {<br />
+				if ($('#notre-demarche').isOnScreen()) {<br />
+							console.log('eee')</p>
+<p>				} else {<br />
+					// The element is NOT visible, do something else						</p>
+<p>				}<br />
+			});<br />
+</code></p>
+
+
+Titre: Menu collapse on mobile
+Contenu: <p>JS </p>
+<p><code><br />
+//Menu collapse on mobile<br />
+	//Menu collapse on mobile<br />
+    function dc_collapse_submenus() {<br />
+        var $menu = $('#mobile_menu'),<br />
+            dc_top_level_link = '#mobile_menu .menu-item-has-children > a';</p>
+<p>        $menu.find('a').each(function() {<br />
+            $(this).off('click');</p>
+<p>            if ( $(this).is(dc_top_level_link) ) {<br />
+                $(this).attr('href', '#');<br />
+            }</p>
+<p>            if ( ! $(this).siblings('.sub-menu').length ) {<br />
+                $(this).on('click', function(event) {<br />
+                    $(this).parents('.mobile_nav').trigger('click');<br />
+                });<br />
+            } else {<br />
+                $(this).on('click', function(event) {<br />
+                    event.preventDefault();<br />
+                    $(this).parent().toggleClass('visible');<br />
+                });<br />
+            }<br />
+        });<br />
+    }</p>
+<p>    $(window).load(function() {<br />
+        setTimeout(function() {<br />
+            dc_collapse_submenus();<br />
+        }, 700);<br />
+    });<br />
+</code></p>
+<p>CSS</p>
+<p><code><br />
+/* CSS refermer les sous-menus sur mobile */</p>
+<p>#main-header .et_mobile_menu .menu-item-has-children > a {<br />
+	background-color: transparent;<br />
+	position: relative;<br />
+}<br />
+#main-header .et_mobile_menu .menu-item-has-children > a:after {<br />
+	font-family: 'ETmodules';<br />
+	text-align: center;<br />
+	speak: none;<br />
+	font-weight: normal;<br />
+	font-variant: normal;<br />
+	text-transform: none;<br />
+	-webkit-font-smoothing: antialiased;<br />
+	position: absolute;<br />
+}<br />
+#main-header .et_mobile_menu .menu-item-has-children > a:after {<br />
+	font-size: 16px;<br />
+	content: '\4c';<br />
+	top: 13px;<br />
+	right: 10px;<br />
+}<br />
+#main-header .et_mobile_menu .menu-item-has-children.visible > a:after {<br />
+	content: '\4d';<br />
+}<br />
+#main-header .et_mobile_menu ul.sub-menu {<br />
+	display: none !important;<br />
+	visibility: hidden !important;<br />
+	transition: all 1.5s ease-in-out;<br />
+}<br />
+#main-header .et_mobile_menu .visible > ul.sub-menu {<br />
+	display: block !important;<br />
+	visibility: visible !important;<br />
+}<br />
+</code></p>
+
+
+Titre: Si URL contient
+Contenu: <p><code><br />
+if (window.location.href.indexOf("texte") > -1){</p>
+<p>}<br />
+</code></p>
+
+
+Titre: AJAX Event
+Contenu: <p><code><br />
+$(document).bind("ajaxSend", function () {<br />
+	console.log('ajax on');<br />
+}).bind("ajaxComplete", function () {<br />
+	console.log('ajax end');<br />
+});<br />
+</code></p>
+
+
+Titre: setTimeout setInterval
+Contenu: <p><code><br />
+setTimeout(function () {</p>
+<p>}, 1000);<br />
+</code></p>
+<p>&#8212;</p>
+<p><code><br />
+setInterval(function(){ </p>
+<p> }, 1000);<br />
+</code></p>
+
+
+Titre: Jquery $ on WP
+Contenu: <p><code><br />
+jQuery(document).ready(function ($) {<br />
+//-----------------</p>
+<p>//-----------------<br />
+});<br />
+</code></p>
+
+
+Titre: Template publication PDF
+Contenu: <iframe name='4148212dfa448ccabaef169c415696f0' onload='e2pdf.viewerOnLoad(this)' style='' class='e2pdf-view e2pdf-dark-theme' width='100%' height='500' src='https://admin.tswd.fr/wp-content/plugins/e2pdf/assets/pdf.js/web/viewer.html?file=https%3A%2F%2Fadmin.tswd.fr%2F%3Fpage%3De2pdf-download%26uid%3D1a61b1cf1443c3940916495ac979d389%26v%3D1.20.16%26saveName%3DDevis%2520template.pdf'></iframe>
+<a rel='nofollow' id='e2pdf-download' class='e2pdf-download e2pdf-format-pdf' target='_blank' href='https://admin.tswd.fr/?page=e2pdf-download&#038;uid=1a61b1cf1443c3940916495ac979d389'>Download</a>
+
+
